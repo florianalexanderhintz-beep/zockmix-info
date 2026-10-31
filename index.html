@@ -1,24 +1,96 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" data-t-de="Zockmix – 52 Spiele und mehr in einer App" data-t-en="Zockmix – 52 games and more in one app">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zockmix</title>
-<style>
-  body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: linear-gradient(160deg, #8a3cff, #1f5bff); color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-  main { max-width: 560px; margin: 24px; padding: 28px 24px; border-radius: 24px; background: rgba(255, 255, 255, .12); text-align: center; }
-  img { width: 112px; height: 112px; border-radius: 26px; box-shadow: 0 8px 24px rgba(0, 0, 0, .25); }
-  h1 { margin: 16px 0 6px; font-size: 34px; }
-  p { font-size: 17px; line-height: 1.5; }
-  a { display: inline-block; margin: 8px 6px 0; padding: 12px 18px; border-radius: 99px; background: #fff; color: #3a2a8a; font-weight: 700; text-decoration: none; }
-</style>
+<title>Zockmix – 52 Spiele und mehr in einer App</title>
+<meta name="description" content="Zockmix: 52 Spiele, ein Haustier, 100 Entspannungs-Spielzeuge, Musik, Malen und mehr – ohne Werbung, ohne Käufe in der App, ohne Internet.">
+<meta name="theme-color" content="#152a6a">
+<link rel="icon" href="zockmix-symbol.png">
+<link rel="stylesheet" href="style.css">
+<script src="lang.js"></script>
 </head>
 <body>
-<main>
-  <img src="zockmix-symbol.png" alt="Zockmix-Symbol">
-  <h1>Zockmix</h1>
-  <p>Spielen, Lernen und Entspannen in einer App – ohne Werbung, ohne Käufe in der App und ohne Internet.<br>Alle Daten bleiben auf deinem Handy.</p>
-  <a href="datenschutz.html">Datenschutzerklärung</a><a href="datenschutz.html#en">Privacy policy (English)</a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#" data-keep="index.html"><img src="zockmix-symbol.png" alt="">ZOCK<b>MIX</b></a>
+  <div class="langsw" role="group" aria-label="Sprache / Language">
+    <button data-l="de" aria-pressed="true"><svg viewBox="0 0 5 3" preserveAspectRatio="none"><rect width="5" height="3" fill="#ffce00"/><rect width="5" height="2" fill="#dd0000"/><rect width="5" height="1" fill="#111"/></svg>DE</button>
+    <button data-l="en" aria-pressed="false"><svg viewBox="0 0 60 38" preserveAspectRatio="none"><defs><clipPath id="fa"><path d="M0 0H60L0 38z"/></clipPath><clipPath id="fb"><path d="M60 0V38H0z"/></clipPath><clipPath id="fc"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath></defs><g clip-path="url(#fa)"><rect width="60" height="38" fill="#fff"/><path d="M0 1.46h60M0 7.31h60M0 13.15h60M0 19h60M0 24.85h60M0 30.69h60M0 36.54h60" stroke="#b22234" stroke-width="2.92"/><rect width="26" height="20.5" fill="#3c3b6e"/></g><g clip-path="url(#fb)"><g transform="scale(1 1.2667)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" clip-path="url(#fc)" stroke="#c8102e" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></g></g><path d="M60 0L0 38" stroke="#fff" stroke-width="1.6"/></svg>EN</button>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1 class="logo">ZOCK<span>MIX</span></h1>
+    <div class="balls" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="lead"><span lang="de">52 Spiele, ein eigenes Haustier, 100 Entspannungs-Spielzeuge, Musik, Malen und vieles mehr – alles in einer App.</span><span lang="en">52 games, your own pet, 100 relaxing toys, music, painting and much more – all in one app.</span></p>
+    <div class="chips">
+      <span lang="de">🚫 Keine Werbung</span><span lang="en">🚫 No ads</span>
+      <span lang="de">🛒 Keine Käufe in der App</span><span lang="en">🛒 No in-app purchases</span>
+      <span lang="de">🔒 Keine Daten gesammelt</span><span lang="en">🔒 No data collected</span>
+      <span lang="de">📶 Läuft ohne Internet</span><span lang="en">📶 Works offline</span>
+    </div>
+    <div class="soon"><span lang="de">📱 Bald bei Google Play</span><span lang="en">📱 Coming soon to Google Play</span></div>
+  </section>
+
+  <div class="shots">
+    <figure><img lang="de" src="img/de-1-start.jpg" alt="Startseite" loading="lazy"><img lang="en" src="img/en-1-start.jpg" alt="Home screen" loading="lazy"><figcaption><span lang="de">Startseite</span><span lang="en">Home screen</span></figcaption></figure>
+    <figure><img lang="de" src="img/de-2-spiel.jpg" alt="Spiel Tor-Truppe" loading="lazy"><img lang="en" src="img/en-2-spiel.jpg" alt="Game Gate Squad" loading="lazy"><figcaption><span lang="de">52 Spiele</span><span lang="en">52 games</span></figcaption></figure>
+    <figure><img lang="de" src="img/de-3-chillmix.jpg" alt="Chillmix" loading="lazy"><img lang="en" src="img/en-3-chillmix.jpg" alt="Chillmix" loading="lazy"><figcaption>Chillmix</figcaption></figure>
+    <figure><img lang="de" src="img/de-4-zocki.jpg" alt="Zocki" loading="lazy"><img lang="en" src="img/en-4-zocki.jpg" alt="Zocki" loading="lazy"><figcaption>Zocki</figcaption></figure>
+    <figure><img lang="de" src="img/de-5-spukmix.jpg" alt="Spukmix" loading="lazy"><img lang="en" src="img/en-5-spukmix.jpg" alt="Spukmix" loading="lazy"><figcaption>Spukmix</figcaption></figure>
+  </div>
+
+  <section class="blk">
+    <h2><span lang="de">Was steckt <span>drin?</span></span><span lang="en">What’s <span>inside?</span></span></h2>
+    <div class="grid">
+      <div class="card"><div class="em">🎮</div><h3 lang="de">52 Spiele</h3><h3 lang="en">52 games</h3><p lang="de">Rennen, Knobeln, Geschick und Strategie – mit Leveln, Bossen und Welten. Viele auch zu zweit auf einem Handy.</p><p lang="en">Racing, puzzles, skill and strategy – with levels, bosses and worlds. Many for two players on one phone.</p></div>
+      <div class="card"><div class="em">🐾</div><h3>Zocki</h3><p lang="de">Dein eigenes Haustier: füttern, baden, Zimmer einrichten, im Markt einkaufen und Mini-Spiele spielen.</p><p lang="en">Your own pet: feed it, bathe it, decorate its rooms, go shopping and play mini games.</p></div>
+      <div class="card"><div class="em">🌿</div><h3>Chillmix</h3><p lang="de">100 Spielzeuge zum Entspannen: Folie abziehen, Bambusbrunnen bauen, Katze streicheln, Gemüse schneiden …</p><p lang="en">100 relaxing toys: peel screen protectors, build a bamboo fountain, pet the cat, slice veggies …</p></div>
+      <div class="card"><div class="em">👻</div><h3>Spukmix</h3><p lang="de">Versteck dich, bau dein Zimmer aus und halte bis zum Morgen durch – allein, zu zweit oder als Monster.</p><p lang="en">Hide, upgrade your room and hold out until morning – alone, with two players or as the monster.</p></div>
+      <div class="card"><div class="em">🧱</div><h3>Baumix</h3><p lang="de">Deine eigene Klötzchenwelt in 3D: bauen, entdecken, basteln.</p><p lang="en">Your own block world in 3D: build, explore, craft.</p></div>
+      <div class="card"><div class="em">🎵</div><h3>Beatmix &amp; Malmix</h3><p lang="de">Beats, Klavier und Lieder spielen – malen, ausmalen und Pixel-Kunst.</p><p lang="en">Play beats, piano and songs – draw, color and make pixel art.</p></div>
+      <div class="card"><div class="em">❓</div><h3>Quizmix</h3><p lang="de">Das Quiz für schlaue Köpfe – allein oder als Duell auf einem Handy.</p><p lang="en">The quiz for clever kids – alone or as a duel on one phone.</p></div>
+      <div class="card"><div class="em">💼</div><h3 lang="de">Simulatoren</h3><h3 lang="en">Simulators</h3><p lang="de">Gründe deine eigene Firma und baue Handys, PCs und Spielkonsolen – von damals bis heute.</p><p lang="en">Found your own company and build phones, PCs and game consoles – from the past to today.</p></div>
+      <div class="card note"><div class="em">📚</div><h3>Lernmix <span class="tag" lang="en">German only</span></h3><p lang="de">Lernen mit dem Chamäleon Lumi: 800 Lektionen für Klasse 1–10, Vokabeltrainer und Foto-Hilfe für Aufgaben.</p><p lang="en">Learning with Lumi the chameleon for German schools: 800 lessons for grades 1–10 – only available in German.</p></div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <h2><span lang="de">Für <span>Eltern</span></span><span lang="en">For <span>parents</span></span></h2>
+    <div class="parents">
+      <div><b>🔐</b><span lang="de">Kindersicherung mit PIN: Alter einstellen, Spiele einzeln erlauben.</span><span lang="en">Parental controls with PIN: set the age, allow games one by one.</span></div>
+      <div><b>💶</b><span lang="de">Einmal kaufen – keine Werbung, keine Käufe in der App, kein Abo.</span><span lang="en">Buy once – no ads, no in-app purchases, no subscription.</span></div>
+      <div><b>💬</b><span lang="de">Kein Chat mit Fremden, keine Konten, keine Anmeldung.</span><span lang="en">No chat with strangers, no accounts, no sign-up.</span></div>
+      <div><b>🔒</b><span lang="de">Keine Datensammlung: Alles bleibt auf dem Handy.</span><span lang="en">No data collection: everything stays on the phone.</span></div>
+    </div>
+  </section>
+
+  <section class="blk" id="hilfe">
+    <h2><span lang="de">Hilfe &amp; <span>Fragen</span></span><span lang="en">Help &amp; <span>questions</span></span></h2>
+    <details><summary><span lang="de">Braucht Zockmix Internet?</span><span lang="en">Does Zockmix need the internet?</span></summary>
+      <p lang="de">Nein. Alles läuft ohne Internet – du kannst WLAN und mobile Daten ruhig ausschalten.</p><p lang="en">No. Everything works offline – you can turn off Wi-Fi and mobile data.</p></details>
+    <details><summary><span lang="de">Wie wechsle ich die Sprache?</span><span lang="en">How do I change the language?</span></summary>
+      <p lang="de">Einstellungen (Zahnrad oben rechts) → ganz oben „Sprache · Language“. Zockmix startet dann kurz neu. Lernmix gibt es nur auf Deutsch.</p><p lang="en">Settings (gear at the top right) → “Sprache · Language” at the very top. Zockmix restarts briefly. Lernmix is only available in German.</p></details>
+    <details><summary><span lang="de">Wie sichere ich meinen Spielstand?</span><span lang="en">How do I back up my progress?</span></summary>
+      <p lang="de">Einstellungen → „Sicherung &amp; Spielstand“: Zockmix legt jede Woche eine Sicherungsdatei im Ordner „Download/Zockmix Sicherung“ an und kann zusätzlich die Google-Sicherung nutzen. Mit „Wiederherstellen“ holst du alles zurück – auch auf einem neuen Handy.</p><p lang="en">Settings → “Backup &amp; progress”: Zockmix creates a backup file every week in the folder “Download/Zockmix Sicherung” and can also use Google backup. “Restore” brings everything back – even on a new phone.</p></details>
+    <details><summary><span lang="de">Wie funktioniert die Kindersicherung?</span><span lang="en">How do parental controls work?</span></summary>
+      <p lang="de">Einstellungen → „Familie“ → „Kindersicherung“: eine 4-stellige PIN festlegen, das Alter wählen und Spiele einzeln erlauben oder sperren.</p><p lang="en">Settings → “Family” → “Parental controls”: set a 4-digit PIN, choose the age and allow or block games one by one.</p></details>
+    <details><summary><span lang="de">Etwas klappt nicht – was tun?</span><span lang="en">Something isn’t working – what now?</span></summary>
+      <p lang="de">Einstellungen → „Hilfe für Tester“ → „Fehler-Liste“ → „Kopieren“ und uns die Liste per E-Mail schicken. Die Liste bleibt sonst nur auf deinem Handy – Zockmix verschickt nichts von selbst.</p><p lang="en">Settings → “Help for testers” → “Error list” → “Copy” and send us the list by e-mail. Otherwise the list stays on your phone – Zockmix never sends anything by itself.</p></details>
+  </section>
+
+  <section class="blk contact">
+    <h2><span lang="de">Kontakt</span><span lang="en">Contact</span></h2>
+    <p lang="de">Fragen, Wünsche oder einen Fehler gefunden? Schreib uns:</p><p lang="en">Questions, ideas or found a bug? Write to us:</p>
+    <a class="mail" href="mailto:zockmix.games@gmail.com">✉️ zockmix.games@gmail.com</a>
+  </section>
 </main>
+
+<footer><div class="wrap">
+  <a href="datenschutz.html" data-keep="datenschutz.html"><span lang="de">Datenschutz</span><span lang="en">Privacy policy</span></a>
+  <a href="impressum.html" data-keep="impressum.html"><span lang="de">Impressum</span><span lang="en">Legal notice</span></a>
+  <p><span lang="de">Alle Bilder, Figuren, Klänge und Musik sind selbst gemacht.</span><span lang="en">All graphics, characters, sounds and music are original.</span> © 2026 Zockmix</p>
+</div></footer>
 </body>
 </html>

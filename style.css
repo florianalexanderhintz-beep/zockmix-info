@@ -1,0 +1,97 @@
+/* Zockmix – Infoseite. Nur eigene Dateien: keine fremden Schriften, keine Cookies, kein Tracking. */
+:root { --gold: #ffd23d; --ink: #1d2340; --card: rgba(255, 255, 255, .09); --line: rgba(255, 255, 255, .14); }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: #fff; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: radial-gradient(ellipse at 50% -10%, #3a5fd0 0%, #1a2f6a 38%, #0b1636 75%) fixed, #0b1636; }
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .45; z-index: 0;
+  background-image: radial-gradient(circle at 15% 20%, rgba(255,224,102,.35) 0 2px, transparent 3px), radial-gradient(circle at 80% 30%, rgba(124,255,107,.3) 0 2px, transparent 3px),
+    radial-gradient(circle at 30% 80%, rgba(255,106,193,.3) 0 2px, transparent 3px), radial-gradient(circle at 70% 70%, rgba(95,246,255,.3) 0 2px, transparent 3px);
+  background-size: 260px 300px; }
+/* Sprache: alles mit lang="de"/lang="en" wird passend aus- und eingeblendet */
+html[lang="de"] body [lang="en"], html[lang="en"] body [lang="de"] { display: none !important; }
+a { color: var(--gold); }
+.wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 16px; }
+
+/* Kopfleiste */
+.top { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); background: rgba(11, 22, 54, .72); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 10px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 9px; color: #fff; text-decoration: none; font-weight: 900; font-style: italic; font-size: 20px; letter-spacing: .5px; }
+.brand img { width: 34px; height: 34px; border-radius: 9px; box-shadow: 0 3px 10px rgba(0,0,0,.35); }
+.brand b { color: var(--gold); }
+.langsw { margin-left: auto; display: flex; gap: 4px; padding: 4px; border-radius: 99px; background: rgba(0, 0, 0, .28); border: 1px solid var(--line); }
+.langsw button { display: flex; align-items: center; gap: 6px; border: 0; cursor: pointer; padding: 5px 11px 5px 6px; border-radius: 99px; background: none; color: #cfd8f5; font: 800 13px system-ui, sans-serif; }
+.langsw button svg { width: 24px; height: 16px; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.langsw button[aria-pressed="true"] { background: linear-gradient(180deg, #ffe066, #ff9d00); color: #4a2600; box-shadow: 0 2px 0 #a35a00; }
+
+/* Logo wie in der App */
+.logo { font-size: clamp(64px, 17vw, 120px); line-height: .86; font-weight: 900; font-style: italic; letter-spacing: 2px; text-align: center; margin: 0;
+  text-shadow: 0 6px 0 #0c2f7a, 0 14px 30px rgba(0, 0, 0, .45); transform: rotate(-3deg); animation: pop 3s ease-in-out infinite; }
+.logo span { display: block; padding-top: .16em; margin-top: -.16em; background: linear-gradient(180deg, #fff3b0 0%, #ffd23d 45%, #ff9d00 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 6px 0 #8a4b00); text-shadow: none; }
+@keyframes pop { 0%, 100% { transform: rotate(-3deg) scale(1); } 50% { transform: rotate(-1deg) scale(1.03); } }
+.balls { display: flex; justify-content: center; gap: 12px; height: 46px; align-items: flex-end; margin: 14px 0 6px; }
+.balls i { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset -3px -4px 0 rgba(0,0,0,.22), 0 3px 6px rgba(0,0,0,.3); animation: hop 1s ease-in-out infinite; }
+.balls i:nth-child(1) { background: #ff4d5e; } .balls i:nth-child(2) { background: #ffd23d; animation-delay: .12s; } .balls i:nth-child(3) { background: #35cf66; animation-delay: .24s; }
+.balls i:nth-child(4) { background: #3d8bff; animation-delay: .36s; } .balls i:nth-child(5) { background: #b36bff; animation-delay: .48s; }
+@keyframes hop { 0%, 100% { transform: translateY(0) scale(1.1, .9); } 45% { transform: translateY(-22px) scale(.95, 1.05); } }
+@media (prefers-reduced-motion: reduce) { .logo, .balls i { animation: none; } }
+
+/* Startbereich */
+.hero { text-align: center; padding: 46px 0 18px; }
+.hero p.lead { max-width: 620px; margin: 10px auto 0; font-size: clamp(17px, 2.6vw, 21px); font-weight: 700; color: #e6eeff; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px 0 6px; }
+.chips span { padding: 7px 13px; border-radius: 99px; background: var(--card); border: 1px solid var(--line); font-size: 14px; font-weight: 800; }
+.soon { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; padding: 13px 22px; border-radius: 99px; font-weight: 900; font-size: 17px; color: #123d00;
+  background: linear-gradient(180deg, #b6ff7a, #4fd33a); box-shadow: 0 5px 0 #2b7d1c, 0 10px 24px rgba(0,0,0,.3); }
+
+/* Bilder aus der App */
+.shots { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 26px 16px 22px; margin: 0 -16px; scrollbar-width: none; }
+.shots::-webkit-scrollbar { display: none; }
+.shots figure { flex: none; margin: 0; scroll-snap-align: center; text-align: center; }
+.shots img { display: block; width: 210px; aspect-ratio: 360 / 740; border-radius: 26px; border: 6px solid #0a0f22; background: #0a0f22; object-fit: cover;
+  box-shadow: 0 0 0 2px #3a4670, 0 18px 40px rgba(0,0,0,.45); }
+.shots figcaption { margin-top: 10px; font-weight: 800; font-size: 14px; color: #cfd8f5; }
+@media (min-width: 1000px) { .shots { justify-content: center; } }
+
+/* Abschnitte und Karten */
+section.blk { padding: 26px 0; }
+h2 { font-size: clamp(24px, 4vw, 32px); font-weight: 900; font-style: italic; margin: 0 0 16px; text-align: center; text-shadow: 0 3px 0 #0c2f7a; }
+h2 span { color: var(--gold); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px 16px 14px; }
+.card .em { font-size: 30px; line-height: 1; }
+.card h3 { margin: 8px 0 4px; font-size: 18px; }
+.card p { margin: 0; color: #d3dcf7; font-size: 15px; }
+.card.note { border-style: dashed; }
+.tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 99px; background: rgba(255, 210, 61, .2); color: var(--gold); font-size: 12px; font-weight: 800; vertical-align: 2px; }
+.parents { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.parents div { display: flex; gap: 10px; align-items: flex-start; background: rgba(124,255,107,.08); border: 1px solid rgba(124,255,107,.25); border-radius: 16px; padding: 12px 14px; font-weight: 700; font-size: 15px; }
+.parents b { font-size: 22px; line-height: 1; }
+
+/* Fragen */
+details { background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-bottom: 8px; }
+summary { cursor: pointer; list-style: none; padding: 14px 44px 14px 16px; font-weight: 800; position: relative; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: '+'; position: absolute; right: 16px; top: 9px; font-size: 24px; color: var(--gold); transition: transform .2s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { margin: 0; padding: 0 16px 14px; color: #d3dcf7; }
+
+.contact { text-align: center; }
+.contact a.mail { display: inline-block; margin-top: 6px; padding: 12px 20px; border-radius: 99px; background: rgba(255,255,255,.12); border: 1px solid var(--line); color: #fff; font-weight: 800; text-decoration: none; }
+
+/* Fuß */
+footer { position: relative; z-index: 1; margin-top: 30px; padding: 22px 0 34px; border-top: 1px solid var(--line); text-align: center; color: #aab6dc; font-size: 14px; }
+footer a { color: #fff; margin: 0 8px; font-weight: 700; text-decoration: none; }
+footer p { margin: 10px 0 0; }
+
+/* Text-Seiten (Datenschutz, Impressum) */
+.doc { max-width: 780px; margin: 26px auto 0; background: #fff; color: var(--ink); border-radius: 24px; padding: 26px 22px 30px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+.doc h1 { font-size: clamp(24px, 4.5vw, 32px); font-weight: 900; margin: 0 0 4px; color: #1a2f6a; }
+.doc h2 { font-size: 19px; font-style: normal; text-align: left; text-shadow: none; margin: 26px 0 6px; color: #1a2f6a; }
+.doc h3 { font-size: 16px; margin: 16px 0 4px; }
+.doc a { color: #3a5fd0; }
+.doc .mut { color: #66638a; font-size: 14px; }
+.doc .box { background: #f1f4ff; border-left: 5px solid #3d8bff; border-radius: 12px; padding: 12px 14px; }
+.doc ul { padding-left: 20px; } .doc li { margin: 4px 0; }
+@media (max-width: 480px) { .doc { border-radius: 18px; padding: 20px 16px 24px; } }
