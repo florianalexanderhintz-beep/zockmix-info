@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zockwerk</title>
+<meta name="description" content="Zockwerk, die Zockmix-Werkstatt: Neuigkeiten, bekannte Fehler, Ideen und Fehler melden – ohne Anmeldung, ohne Datensammlung. Zockwerk, the Zockmix workshop: news, known bugs, ideas and bug reports.">
+<meta name="theme-color" content="#0b1636">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<header class="top"><div class="in">
+  <a class="brand" href="#start"><img src="img/icon-192.png" alt="">ZOCK<b>WERK</b></a>
+  <div class="langsw" role="group" aria-label="Sprache / Language">
+    <button data-l="de" aria-pressed="true"><svg viewBox="0 0 5 3" preserveAspectRatio="none" aria-hidden="true"><rect width="5" height="3" fill="#ffce00"/><rect width="5" height="2" fill="#dd0000"/><rect width="5" height="1" fill="#111"/></svg><span class="lt">DE</span></button>
+    <button data-l="en" aria-pressed="false"><svg aria-hidden="true" viewBox="0 0 60 38" preserveAspectRatio="none"><defs><clipPath id="fa"><path d="M0 0H60L0 38z"/></clipPath><clipPath id="fb"><path d="M60 0V38H0z"/></clipPath><clipPath id="fc"><path d="M30 15h30v15zv15H0zH0V0zV0h30z"/></clipPath></defs><g clip-path="url(#fa)"><rect width="60" height="38" fill="#fff"/><path d="M0 1.46h60M0 7.31h60M0 13.15h60M0 19h60M0 24.85h60M0 30.69h60M0 36.54h60" stroke="#b22234" stroke-width="2.92"/><rect width="26" height="20.5" fill="#3c3b6e"/></g><g clip-path="url(#fb)"><g transform="scale(1 1.2667)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30M60 0L0 30" clip-path="url(#fc)" stroke="#c8102e" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#c8102e" stroke-width="6"/></g></g><path d="M60 0L0 38" stroke="#fff" stroke-width="1.6"/></svg><span class="lt">EN</span></button>
+  </div>
+</div></header>
+<main><div id="view" class="view"><noscript><p style="padding:40px 0;text-align:center">Bitte JavaScript einschalten. · Please turn on JavaScript.</p></noscript></div></main>
+<nav class="tabs" id="tabs" aria-label="Bereiche / Sections"></nav>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="js/code.js"></script>
+<script src="daten/beitraege.js"></script>
+<script src="daten/fehler.js"></script>
+<script src="daten/ideen.js"></script>
+<script src="daten/fragen.js"></script>
+<script src="daten/helfer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
