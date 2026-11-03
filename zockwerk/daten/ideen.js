@@ -1,5 +1,5 @@
 /* Ideen und Pläne. Felder: id (I-001 …), s Stand (idee | geplant | arbeit | fertig | nein), a Bereich (wie bei fehler.js),
-   d eingeschickt/notiert am, u zuletzt geändert (freiwillig), v wie viele sich das wünschen (freiwillig),
+   d eingeschickt/notiert am, u zuletzt geändert (freiwillig), v wie viele sich das wünschen = „Will ich auch“-Stimmen (freiwillig),
    by Helfer-ids (wer die Idee hatte – gibt Punkte), de/en { t Titel, x Text, r Antwort/Grund vom Entwickler }. */
 window.ZH = window.ZH || {};
 ZH.ideas = [

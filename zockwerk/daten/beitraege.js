@@ -1,6 +1,6 @@
 /* Beiträge (Neuigkeiten) – NEUESTE OBEN. Nur der Entwickler schreibt hier.
    Felder: id (b + Zahl, nie doppelt), d Datum JJJJ-MM-TT, k Art (neu | update | tipp | test | info), ic Bildchen (Name aus js/icons.js, z. B. sparkle, castle, home, phone, cog, bug, star – darf fehlen, dann passend zur Art),
-   de/en { t Titel, x Text }. Im Text: Leerzeile = neuer Absatz, Zeilen mit „- “ = Liste, **fett**,
+   de/en { t Titel, x Text }, l Zahl der Likes (freiwillig, aus den Stimmen-E-Mails zusammengezählt). Im Text: Leerzeile = neuer Absatz, Zeilen mit „- “ = Liste, **fett**,
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [

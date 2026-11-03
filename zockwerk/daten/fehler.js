@@ -1,7 +1,7 @@
 /* Bekannte Fehler. Reihenfolge egal (die Seite sortiert selbst).
    Felder: id (F-001 …, nie doppelt), s Stand (offen | pruef | arbeit | fertig | kein), a Bereich (siehe AREAS in js/app.js:
    spiele, zocki, chillmix, spukmix, baumix, burg, beatmix, malmix, quizmix, lernmix, sim, app, sonst), d gemeldet am,
-   f behoben am (nur bei fertig), u zuletzt geändert (freiwillig, für den NEU-Punkt), n Zahl der Meldungen (freiwillig),
+   f behoben am (nur bei fertig), u zuletzt geändert (freiwillig, für den NEU-Punkt), n Zahl der Meldungen + „Hab ich auch“-Stimmen (freiwillig),
    by Helfer-ids (zuerst wer ihn als Erstes gemeldet hat – gibt Punkte, siehe daten/helfer.js),
    de/en { t Titel, w wo (Spiel/Stelle), x was passiert, h Tipp/Umweg }. */
 window.ZH = window.ZH || {};

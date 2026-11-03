@@ -81,6 +81,21 @@
   const posts = (ZH.posts || []).slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
   const bugs = ZH.bugs || [], ideas = ZH.ideas || [], faq = ZH.faq || [], helpers = ZH.helpers || [];
   const byId = id => helpers.find(h => h.id === id);
+  const findAny = id => bugs.find(x => x.id === id) || ideas.find(x => x.id === id) || posts.find(x => x.id === id);
+
+  // ---------- Likes/Stimmen ohne Server: gemerkt auf dem Handy (zmh-likes { id: { b: Zahl beim Liken, s: 1 = verschickt } }),
+  // gezählt werden sie erst, wenn man sie per E-Mail schickt (Leiste #vbar). Angezeigt: offizielle Zahl (Beitrag l, Idee v, Fehler n),
+  // mit eigenem Like mindestens eins mehr als beim Liken – zählt der Entwickler die Stimme dazu, gibt es nichts doppelt.
+  let likes = LS.get('likes', {}) || {};
+  const baseOf = id => { const o = findAny(id); return o ? (o.l || o.v || o.n || 0) | 0 : 0; };
+  const likeCount = id => { const n = baseOf(id), L = likes[id]; return L ? Math.max(n, (L.b | 0) + 1) : n; };
+  const unsent = () => Object.keys(likes).filter(id => !likes[id].s && findAny(id));
+  const LK = { heart: ['Gefällt mir', 'Like', '#ff6fae'], thumb: ['Will ich auch', 'Want it too', '#5aa8ff'], users: ['Hab ich auch', 'Me too', '#ffb84d'] };
+  function likeBtn(id, kind) {
+    const on = !!likes[id], n = likeCount(id), k = LK[kind];
+    return '<button class="like' + (on ? ' on' : '') + '" data-like="' + esc(id) + '" data-kind="' + kind + '" aria-pressed="' + on + '" style="--c:' + k[2] + '">' +
+      I(kind) + '<span>' + T(k[0], k[1]) + '</span>' + (n ? '<b>' + n + '</b>' : '') + '</button>';
+  }
 
   function score(h) {
     const it = [], s = { firsts: 0, acc: 0, done: 0, test: 0, tipp: 0 };
@@ -236,12 +251,13 @@
       '<div class="meta"><span class="tag" style="--c:' + k[3] + '">' + T(k[1], k[2]) + '</span>' + fmtDate(p.d) + newBadge(p.d) + '</div>' +
       '<h3>' + esc(F(p, 't')) + '</h3></div></div>' +
       '<div class="tx' + (long ? ' clamp' : '') + '">' + md(x) + '</div>' +
-      (long ? '<button class="more" data-more>' + T('Weiterlesen', 'Read more') + I('chev') + '</button>' : '') + '</article>';
+      (long ? '<button class="more" data-more>' + T('Weiterlesen', 'Read more') + I('chev') + '</button>' : '') +
+      '<div class="pfoot">' + likeBtn(p.id, 'heart') + '</div></article>';
   }
   function about() {
     return '<details class="card about rv"><summary>' + I('lock') + T('Über diese Seite', 'About this page') + I('chev', 'chev') + '</summary><div class="tx">' +
-      md(T('Das Zockwerk **sammelt keine Daten**: keine Anmeldung, keine Cookies, keine Werbung, keine Statistik. Nur auf deinem Handy merkt es sich deine Sprache, deinen Entwurf beim Melden und deinen Helfer-Code – das kannst du jederzeit löschen.\n\nWenn du etwas meldest, öffnet sich dein E-Mail-Programm mit dem fertigen Text. Du siehst genau, was drinsteht, und schickst es selbst ab. Wir nutzen deine E-Mail nur, um dir zu antworten.',
-        'Zockwerk **collects no data**: no sign-up, no cookies, no ads, no statistics. Only on your phone it remembers your language, your report draft and your helper code – you can delete that at any time.\n\nWhen you report something, your e-mail app opens with the finished text. You see exactly what’s in it and send it yourself. We only use your e-mail to answer you.')) +
+      md(T('Das Zockwerk **sammelt keine Daten**: keine Anmeldung, keine Cookies, keine Werbung, keine Statistik. Nur auf deinem Handy merkt es sich deine Sprache, deinen Entwurf beim Melden, deine Likes und deinen Helfer-Code – das kannst du jederzeit löschen.\n\nWenn du etwas meldest, öffnet sich dein E-Mail-Programm mit dem fertigen Text. Du siehst genau, was drinsteht, und schickst es selbst ab. Wir nutzen deine E-Mail nur, um dir zu antworten.',
+        'Zockwerk **collects no data**: no sign-up, no cookies, no ads, no statistics. Only on your phone it remembers your language, your report draft, your likes and your helper code – you can delete that at any time.\n\nWhen you report something, your e-mail app opens with the finished text. You see exactly what’s in it and send it yourself. We only use your e-mail to answer you.')) +
       '<p class="links"><a href="' + INFO + 'datenschutz.html#' + (EN ? 'en' : 'de') + '" target="_blank" rel="noopener">' + T('Datenschutz', 'Privacy policy') + '</a>' +
       '<a href="' + INFO + 'impressum.html#' + (EN ? 'en' : 'de') + '" target="_blank" rel="noopener">' + T('Impressum', 'Legal notice') + '</a>' +
       '<a href="' + INFO + '#' + (EN ? 'en' : 'de') + '" target="_blank" rel="noopener">' + T('Über Zockmix', 'About Zockmix') + '</a></p>' +
@@ -286,8 +302,8 @@
       (F(b, 'x') ? '<div class="tx">' + md(F(b, 'x')) + '</div>' : '') +
       (h ? '<div class="note tip">' + I('bulb') + '<span><b>' + T('Tipp', 'Tip') + ':</b> ' + inl(h) + '</span></div>' : '') +
       (b.s === 'fertig' && b.f ? '<div class="note ok">' + I('check') + '<span>' + T('Behoben am', 'Fixed on') + ' ' + fmtDate(b.f) + ' – ' + T('bitte Zockmix aktualisieren.', 'please update Zockmix.') + '</span></div>' : '') +
-      '<div class="ifoot">' + credit(b.by) + (b.n > 1 ? '<span class="cnt">' + I('users') + b.n + ' ' + T('Meldungen', 'reports') + '</span>' : '') +
-      '<button class="btn sm ' + (done ? 'ghost' : 'b2') + '" data-me="' + esc(b.id) + '">' + (done ? I('refresh') + T('Immer noch da?', 'Still there?') : I('plus') + T('Hab ich auch', 'Me too')) + '</button></div>' +
+      '<div class="ifoot">' + credit(b.by) + '<span class="acts2">' + (done ? '<button class="btn sm ghost" data-me="' + esc(b.id) + '">' + I('refresh') + T('Immer noch da?', 'Still there?') + '</button>'
+        : '<button class="link sm" data-me="' + esc(b.id) + '">' + I('pencil') + T('Mehr erzählen', 'Tell us more') + '</button>' + likeBtn(b.id, 'users')) + '</span></div>' +
       '</article>';
   }
 
@@ -296,13 +312,16 @@
   const IORD = { arbeit: 0, geplant: 1, idee: 2, fertig: 3, nein: 4 };
   function vIdeas() {
     const cnt = g => ideas.filter(x => !IGRP[g] || IGRP[g].includes(x.s)).length;
-    const l = ideas.filter(x => !IGRP[st.idf] || IGRP[st.idf].includes(x.s))
-      .sort((a, b) => (IORD[a.s] - IORD[b.s]) || String(b.u || b.d).localeCompare(String(a.u || a.d)));
     return head('bulb', '#ffc93d', T('Ideen & Pläne', 'Ideas & plans'), T('Was ist geplant, was bauen wir gerade, was ist schon fertig?', 'What’s planned, what are we building, what’s done?')) +
       '<div class="chips rv" role="group">' + [['alle', 'Alle', 'All'], ['plan', 'Geplant', 'Planned'], ['fertig', 'Fertig', 'Done'], ['idee', 'Ideen', 'Ideas'], ['nein', 'Passt nicht', 'Not planned']]
         .map(c => '<button data-if="' + c[0] + '" aria-pressed="' + (st.idf === c[0]) + '">' + T(c[1], c[2]) + ' <small>' + cnt(c[0]) + '</small></button>').join('') + '</div>' +
-      '<div id="ilist">' + (l.length ? l.map(idea).join('') : '<div class="empty rv">' + I('bulb', 'big') + '<p>' + T('Hier ist gerade nichts.', 'Nothing here right now.') + '</p></div>') + '</div>' +
+      '<div id="ilist">' + ideaList() + '</div>' +
       '<div class="card cta rv"><p>' + T('Du hast eine Idee für Zockmix?', 'Got an idea for Zockmix?') + '</p><a class="btn" href="#melden" data-k="idee">' + I('bulb') + T('Idee schicken', 'Send an idea') + '</a></div>';
+  }
+  function ideaList() {
+    const l = ideas.filter(x => !IGRP[st.idf] || IGRP[st.idf].includes(x.s))
+      .sort((a, b) => (IORD[a.s] - IORD[b.s]) || String(b.u || b.d).localeCompare(String(a.u || a.d)));
+    return l.length ? l.map(idea).join('') : '<div class="empty rv">' + I('bulb', 'big') + '<p>' + T('Hier ist gerade nichts.', 'Nothing here right now.') + '</p></div>';
   }
   function idea(x) {
     const s = IS[x.s] || IS.idee, r = F(x, 'r'), open = x.s !== 'fertig' && x.s !== 'nein';
@@ -311,8 +330,8 @@
       '<h3>' + esc(F(x, 't')) + '</h3><div class="meta">' + areaTag(x.a) + '</div>' +
       (F(x, 'x') ? '<div class="tx">' + md(F(x, 'x')) + '</div>' : '') +
       (r ? '<div class="note dev">' + I('chat') + '<span>' + inl(r) + '</span></div>' : '') +
-      '<div class="ifoot">' + credit(x.by) + (x.v > 1 ? '<span class="cnt">' + I('thumb') + x.v + '</span>' : '') +
-      (open ? '<button class="btn sm b2" data-me="' + esc(x.id) + '">' + I('thumb') + T('Will ich auch', 'Me too') + '</button>' : '') + '</div></article>';
+      '<div class="ifoot">' + credit(x.by) + '<span class="acts2">' + (open ? '<button class="link sm" data-me="' + esc(x.id) + '">' + I('pencil') + T('Mehr dazu schreiben', 'Add your thoughts') + '</button>' + likeBtn(x.id, 'thumb')
+        : x.s === 'fertig' ? likeBtn(x.id, 'heart') : '') + '</span></div></article>';
   }
 
   // ---------- Reiter: Melden ----------
@@ -504,11 +523,13 @@
 
   // ---------- Anzeigen ----------
   const VIEWS = { start: vStart, fehler: vBugs, melden: vReport, ideen: vIdeas, helfer: vHelp };
-  function render(dir) {
+  // mode: 1/-1 = Reiter-Wechsel (gleitet rein), 'keep' = gleiche Seite neu (Sprache, Filter, Auswahl) – sofort sichtbar, ohne Flackern
+  function render(mode) {
     const v = $('#view');
     v.innerHTML = VIEWS[cur]();
     v.className = 'view v-' + cur;
-    if (dir && !RM) { void v.offsetWidth; v.classList.add(dir > 0 ? 'enter-r' : 'enter-l'); }
+    if (mode === 'keep') { reveal(v, true); return; }
+    if (typeof mode === 'number' && mode && !RM) { void v.offsetWidth; v.classList.add(mode > 0 ? 'enter-r' : 'enter-l'); }
     reveal(v);
   }
   function route() {
@@ -518,7 +539,7 @@
     cur = tab; dots[tab] = false;
     if (focusId && tab === 'fehler') { st.bf = 'alle'; st.ba = ''; st.bq = ''; }
     if (focusId && tab === 'ideen') st.idf = 'alle';
-    paintChrome(); render(same ? 0 : dir || 0);
+    paintChrome(); render(same ? 'keep' : dir || 0); voteBar();
     if (focusId) { const el = document.getElementById('i-' + focusId); if (el) { reveal(document, true); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }), 80); } }
     else if (!same) window.scrollTo(0, 0);
   }
@@ -537,26 +558,29 @@
     if (!t) return;
     if (t.dataset.k) setDraftK(t.dataset.k, '', '');
     if (t.dataset.bf) { st.bf = t.dataset.bf; if (cur === 'fehler') { e.preventDefault(); $$('.chips button').forEach(c => c.setAttribute('aria-pressed', String(c === t))); $('#blist').innerHTML = bugList(); reveal($('#blist')); } return; }
-    if (t.dataset.if) { st.idf = t.dataset.if; if (cur === 'ideen') { e.preventDefault(); render(); } return; }
-    if (t.dataset.l) { EN = t.dataset.l === 'en'; LS.set('lang', EN ? 'en' : 'de'); paintChrome(); render(); return; }
+    if (t.dataset.if) { st.idf = t.dataset.if; if (cur === 'ideen') { e.preventDefault(); $$('.chips button').forEach(c => c.setAttribute('aria-pressed', String(c === t))); $('#ilist').innerHTML = ideaList(); reveal($('#ilist')); } return; }
+    if (t.dataset.l) { EN = t.dataset.l === 'en'; LS.set('lang', EN ? 'en' : 'de'); paintChrome(); render('keep'); voteBar(); return; }
+    if (t.dataset.like) { toggleLike(t.dataset.like, t); return; }
     if (t.hasAttribute('data-more')) { const tx = t.previousElementSibling; tx.classList.remove('clamp'); tx.classList.add('open'); t.remove(); return; }
     if (t.dataset.me) {
       const r = findRef(t.dataset.me);
       setDraftK(t.dataset.me[0] === 'I' ? 'idee' : 'fehler', t.dataset.me, r && r.a);
       location.hash = '#melden'; return;
     }
-    if (t.hasAttribute('data-unref')) { draft.ref = ''; saveDraft(); render(); return; }
+    if (t.hasAttribute('data-unref')) { draft.ref = ''; saveDraft(); render('keep'); return; }
     switch (t.id) {
       case 'mcopy': if (check()) copy(mailSubject() + '\n\n' + mailBody(), T('Text kopiert!', 'Text copied!')); break;
       case 'mcaddr': copy(MAIL, T('Adresse kopiert!', 'Address copied!')); break;
       case 'mclear': if (confirm(T('Alles im Formular löschen?', 'Clear everything in the form?'))) { draft = D0(); LS.del('draft'); render(); } break;
       case 'tnew': draft = D0(); LS.del('draft'); st.thx = false; render(); break;
       case 'tback': st.thx = false; render(); break;
-      case 'cout': LS.del('code'); render(); toast(T('Code vergessen.', 'Code forgotten.'), 'check'); break;
+      case 'vsend': sendVotes(); break;
+      case 'vhide': st.vbHide = unsent().length; voteBar(); break;
+      case 'cout': LS.del('code'); render('keep'); toast(T('Code vergessen.', 'Code forgotten.'), 'check'); break;
       case 'instBtn': if (instEv) { instEv.prompt(); instEv.userChoice.finally(() => { instEv = null; const b = $('#instBtn'); if (b) b.hidden = true; }); } break;
       case 'wipe':
         if (confirm(T('Sprache, Entwurf und Helfer-Code auf diesem Handy löschen?', 'Delete language, draft and helper code on this phone?'))) {
-          ['lang', 'draft', 'code', 'seen'].forEach(LS.del); draft = D0(); toast(T('Gelöscht.', 'Deleted.'), 'check'); render();
+          ['lang', 'draft', 'code', 'seen', 'likes'].forEach(LS.del); draft = D0(); likes = {}; toast(T('Gelöscht.', 'Deleted.'), 'check'); render('keep'); voteBar();
         }
         break;
     }
@@ -564,16 +588,20 @@
   document.addEventListener('input', e => {
     const t = e.target;
     if (t.id === 'bq') { st.bq = t.value; $('#blist').innerHTML = bugList(); reveal($('#blist'), true); return; }
-    if (t.dataset.f) {
+    if (t.dataset.f) setField(t);
+  });
+  function setField(t) {
+    {
       draft[t.dataset.f] = t.type === 'checkbox' ? t.checked : t.value; saveDraft();
       const p = $('#mprev'); if (p) p.textContent = mailBody();
       const er = $('#merr'); if (er && !er.hidden && draft.a && String(draft.x).trim().length >= 8) er.hidden = true;
     }
-  });
+  }
   document.addEventListener('change', e => {
     const t = e.target;
     if (t.id === 'ba') { st.ba = t.value; $('#blist').innerHTML = bugList(); reveal($('#blist')); return; }
-    if (t.name === 'k') { draft.k = t.value; saveDraft(); const y = window.scrollY; render(); reveal($('#view'), true); window.scrollTo(0, y); return; }
+    if (t.dataset.f) { setField(t); return; }
+    if (t.name === 'k') { draft.k = t.value; saveDraft(); const y = window.scrollY; render('keep'); window.scrollTo(0, y); return; }
     if (t.name === 'oft') { draft.oft = t.value; saveDraft(); t.closest('fieldset').querySelectorAll('label').forEach(l => l.classList.toggle('on', l.contains(t))); const p = $('#mprev'); if (p) p.textContent = mailBody(); }
   });
   document.addEventListener('submit', e => {
@@ -588,6 +616,43 @@
       LS.set('code', C.fmt(v)); render(); toast(T('Hallo ', 'Hi ') + h.n + '!', 'sparkle');
     }
   });
+
+  function toggleLike(id, btn) {
+    if (likes[id]) delete likes[id]; else likes[id] = { b: baseOf(id), s: 0, d: today };
+    LS.set('likes', likes);
+    const w = document.createElement('div'); w.innerHTML = likeBtn(id, btn.dataset.kind); const nb = w.firstChild;
+    btn.replaceWith(nb);
+    if (likes[id] && !RM) {
+      nb.classList.add('pop');
+      for (let i = 0; i < 8; i++) { const a = i / 8 * Math.PI * 2, s = document.createElement('i'); s.className = 'lk';
+        s.style.cssText = '--x:' + Math.round(Math.cos(a) * 26) + 'px;--y:' + Math.round(Math.sin(a) * 22) + 'px'; nb.appendChild(s); }
+      setTimeout(() => nb.querySelectorAll('.lk').forEach(s => s.remove()), 700);
+    }
+    if (likes[id] && unsent().length === 1) toast(T('Gemerkt! Unten kannst du deine Stimmen abschicken.', 'Saved! You can send your votes below.'), 'heart');
+    voteBar();
+  }
+  // Leiste über den Reitern: „x Stimmen noch nicht geschickt – Senden“
+  function voteBar() {
+    const n = unsent().length, bar = $('#vbar'), show = n > 0 && n > (st.vbHide || 0) && cur !== 'melden';
+    document.body.classList.toggle('vb', show);
+    if (!show) { bar.hidden = true; return; }
+    bar.innerHTML = I('send') + '<span>' + (n === 1 ? T('1 Stimme', '1 vote') : n + ' ' + T('Stimmen', 'votes')) + ' ' + T('noch nicht geschickt', 'not sent yet') +
+      '<small>' + T('Sie zählen, wenn du sie uns schickst.', 'They count once you send them to us.') + '</small></span>' +
+      '<button class="btn sm" id="vsend">' + T('Senden', 'Send') + '</button><button class="x" id="vhide" aria-label="' + T('Später', 'Later') + '">' + I('x') + '</button>';
+    bar.hidden = false;
+  }
+  function sendVotes() {
+    const ids = unsent(); if (!ids.length) return;
+    const KN = { b: ['Beitrag', 'Post'], F: ['Fehler – hab ich auch', 'Bug – me too'], I: ['Idee – will ich auch', 'Idea – want it too'] };
+    const L = [T('Meine Stimmen aus dem Zockwerk:', 'My votes from Zockwerk:'), ''];
+    ids.forEach(id => { const o = findAny(id), k = KN[id[0]] || KN.b; L.push('+1 ' + id + ' (' + T(k[0], k[1]) + '): ' + F(o, 't')); });
+    L.push('', '— ' + T('geschrieben im Zockwerk', 'written in Zockwerk'));
+    const a = document.createElement('a');
+    a.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent('[Zockmix ' + T('Stimmen', 'Votes') + '] ' + ids.join(', ')) + '&body=' + encodeURIComponent(L.join('\n'));
+    document.body.appendChild(a); a.click(); a.remove();
+    ids.forEach(id => { likes[id].s = 1; }); LS.set('likes', likes); st.vbHide = 0; voteBar();
+    toast(T('Danke! Tippe im E-Mail-Programm auf Senden.', 'Thanks! Tap Send in your e-mail app.'), 'check');
+  }
 
   // ---------- Als App installieren ----------
   let instEv = null;
@@ -608,5 +673,5 @@
   fromApp();
   route();
   // Test-Hilfe (für Prüf-Skripte)
-  window.__zh = { score: h => score(h), draft: () => draft, body: () => mailBody(), subject: () => mailSubject(), st, render, go: h => { location.hash = h; } };
+  window.__zh = { likes: () => likes, unsent: () => unsent(), score: h => score(h), draft: () => draft, body: () => mailBody(), subject: () => mailSubject(), st, render, go: h => { location.hash = h; } };
 })();
