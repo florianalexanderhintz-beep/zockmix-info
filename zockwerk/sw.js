@@ -1,7 +1,7 @@
 /* Zockwerk – Offline-Speicher. Immer zuerst aus dem Netz holen (damit neue Beiträge sofort da sind),
    ohne Netz die zuletzt gespeicherte Fassung zeigen. Bei neuen Dateien unten in FILES eintragen und VER hochzählen. */
-const VER = 'zmh-2';
-const FILES = ['./', 'index.html', 'css/app.css', 'js/code.js', 'js/app.js', 'daten/beitraege.js', 'daten/fehler.js', 'daten/ideen.js',
+const VER = 'zmh-3';
+const FILES = ['./', 'index.html', 'css/app.css', 'js/icons.js', 'js/code.js', 'js/app.js', 'daten/beitraege.js', 'daten/fehler.js', 'daten/ideen.js',
   'daten/fragen.js', 'daten/helfer.js', 'manifest.webmanifest', 'img/icon-192.png', 'img/icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VER).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {

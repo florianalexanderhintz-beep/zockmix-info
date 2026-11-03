@@ -23,7 +23,7 @@
     <h2>🔑 Neuer Helfer-Code</h2>
     <div class="row">
       <label class="fl">Spitzname (nie echter Name)<input id="hn" maxlength="20" placeholder="z. B. Blitzfuchs"></label>
-      <label class="fl">Bildchen (ein Emoji)<input id="hav" maxlength="4" value="🦊"></label>
+      <label class="fl">Bildchen (ein Emoji, leer = Anfangsbuchstabe)<input id="hav" maxlength="4" value=""></label>
     </div>
     <label class="check"><input type="checkbox" id="hpub"><span>Darf auf die Ehrenliste (nur wenn der Helfer – bei Kindern die Eltern – ja gesagt hat)</span></label>
     <button class="btn" id="mk">✨ Code machen</button>
@@ -67,7 +67,7 @@
     const n = $('hn').value.trim(); if (!n) { toast('Bitte einen Spitznamen eingeben'); return; }
     const code = C.make(), id = next(ZH.helpers, 'h', 0);
     $('code').textContent = code;
-    $('snip').textContent = "  { id: " + q(id) + ", n: " + q(n) + ", av: " + q($('hav').value.trim() || '🙂') + ", pub: " + ($('hpub').checked ? 1 : 0) +
+    $('snip').textContent = "  { id: " + q(id) + ", n: " + q(n) + ", av: " + q($('hav').value.trim()) + ", pub: " + ($('hpub').checked ? 1 : 0) +
       ", h: " + q(C.hash(code)) + ", seit: " + q(today) + ", badges: [], extra: [] },";
     $('mail').textContent = 'Hallo ' + n + '!\n\nDanke für deine Hilfe – du hast Zockmix besser gemacht! 💖\nDein Helfer-Code: ' + code +
       '\n\nÖffne das Zockwerk → „Helfer“ und gib dort den Code ein. Dann siehst du deinen Rang und deine Abzeichen.\nDen Code bitte niemandem weitergeben.' +

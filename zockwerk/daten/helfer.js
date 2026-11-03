@@ -1,5 +1,5 @@
 /* Helfer (Ränge und Ehrenliste). Nur Spitznamen – NIE echte Namen, Adressen oder E-Mail-Adressen eintragen!
-   Felder: id (h1, h2 … – nie ändern, steht auch bei Fehlern/Ideen unter „by“), n Spitzname, av Bildchen (ein Emoji),
+   Felder: id (h1, h2 … – nie ändern, steht auch bei Fehlern/Ideen unter „by“), n Spitzname, av Bildchen (ein Emoji, darf fehlen – dann der Anfangsbuchstabe auf einer Farbe),
    pub 1 = darf auf die Ehrenliste (nur wenn der Helfer – bei Kindern die Eltern – ja gesagt hat), 0 = nur eigene Karte,
    h Prüfsumme des Helfer-Codes (macht werkzeug.html – der Code selbst kommt NIE hier rein), seit Datum,
    badges Extra-Abzeichen von Hand (ersttester, dank),
