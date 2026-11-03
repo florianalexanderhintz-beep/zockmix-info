@@ -45,4 +45,11 @@ ZH.bugs = [
       x: 'Nach jedem Tippen wurde viel zu viel gespeichert – dadurch ruckelten alle Spielzeuge kurz.' },
     en: { t: 'Toys stuttered after every tap', w: 'all toys',
       x: 'Far too much was saved after every tap – so every toy stuttered for a moment.' } },
+  { id: 'F-008', s: 'fertig', a: 'lernmix', d: '2026-11-03', f: '2026-11-03', n: 1, by: [],
+    de: { t: 'Vokabel-Fotos: zufällige Zeichen und abgeschnittene Wörter', w: 'Lumis Foto-Hilfe, Vokabeln prüfen',
+      x: 'Beim Fotografieren von Vokabel-Seiten aus dem Englischbuch standen oft Krümel in den Wörtern („I] Internat“, „pp.8/9 conversation“, „(p/)“), Wörter wurden vorne abgeschnitten oder mit dem gelben Grammatik-Kasten vermischt. Jetzt liest Lumi solche Seiten fast fehlerfrei: an 6 echten Buchseiten 117 von 117 Einträgen richtig.',
+      h: 'Halte das Handy gerade über die Seite, mit gutem Licht. Ein Wort trotzdem falsch? Tippe es beim Prüfen an und verbessere es – Lumi lernt daraus.' },
+    en: { t: 'Vocabulary photos: random characters and cut-off words', w: 'Lumi’s photo helper (German only), checking words',
+      x: 'When you took a photo of a vocabulary page from your English book, words often had stray characters (“I] Internat”, “pp.8/9 conversation”, “(p/)”), were cut off at the front or got mixed up with the yellow grammar box. Now Lumi reads such pages almost perfectly: 117 of 117 entries right on 6 real book pages.',
+      h: 'Hold the phone straight over the page in good light. A word still wrong? Tap it while checking and fix it – Lumi learns from it.' } },
 ];

@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b5', d: '2026-11-03', k: 'update', ic: 'sparkle',
+    de: { t: 'Lernmix: Vokabel-Fotos fast fehlerfrei',
+      x: 'Lumi liest Vokabel-Seiten aus deinem Englischbuch jetzt viel genauer.\n\n- keine zufälligen Zeichen mehr wie „I] Internat“ oder „pp.8/9“\n- gewölbte Seiten und gelbe Grammatik-Kästen bringen nichts mehr durcheinander\n- Beispielsätze und Hinweise aus dem Buch werden sauberer gelesen\n- deine Listen stehen ganz oben: lange drücken = löschen\n- „Weitere Vokabeln hinzufügen“: die nächste Seite kommt in dieselbe Liste\n\n[Zum Fehler](#fehler/F-008)' },
+    en: { t: 'Lernmix: vocabulary photos almost perfect',
+      x: 'Lumi now reads vocabulary pages from your English book much more exactly (Lernmix is in German).\n\n- no more random characters like “I] Internat” or “pp.8/9”\n- curved pages and yellow grammar boxes don’t mix things up anymore\n- example sentences and notes from the book are read more cleanly\n- your lists are at the top: press and hold = delete\n- “Add more words”: the next page goes into the same list\n\n[To the bug](#fehler/F-008)' } },
   { id: 'b4', d: '2026-11-03', k: 'info', ic: 'cog',
     de: { t: 'Willkommen im Zockwerk!',
       x: 'Das Zockwerk ist die Werkstatt von Zockmix. Zockmix selbst sammelt **keine Daten** und hat nicht einmal Internet. Darum gibt es diese Seite: Hier erfährst du, was es Neues gibt, welche Fehler wir schon kennen und was wir gerade bauen.\n\n- **Fehler:** bekannte Fehler und ob sie schon repariert sind\n- **Melden:** schreib uns einen Fehler, eine Idee oder eine Frage\n- **Ideen:** was geplant ist und was schon fertig ist\n- **Helfer:** wer hilft, sammelt Punkte und steigt im Rang auf\n\nDeine Meldung schickst du ganz normal als E-Mail – du siehst vorher genau, was drinsteht.' },

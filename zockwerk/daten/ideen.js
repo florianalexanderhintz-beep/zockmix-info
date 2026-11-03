@@ -18,4 +18,10 @@ ZH.ideas = [
   { id: 'I-005', s: 'nein', a: 'lernmix', d: '2026-10-31', by: [],
     de: { t: 'Lernmix auf Englisch', x: 'Lernmix auch auf Englisch anbieten.', r: 'Lernmix ist genau für deutsche Schulen gemacht (Klassen, Fächer, Noten 1–6). Darum bleibt es auf Deutsch.' },
     en: { t: 'Lernmix in English', x: 'Offer Lernmix in English too.', r: 'Lernmix is made for German schools (grades, subjects, German report-card marks). So it stays in German.' } },
+  { id: 'I-006', s: 'fertig', a: 'lernmix', d: '2026-11-03', u: '2026-11-03', by: [],
+    de: { t: 'Vokabel-Listen: lange drücken zum Löschen, Listen oben und größer', x: 'Eine eigene Liste lange drücken und dann mit „Wirklich?“ löschen. Die eigenen Listen sollen oben stehen und größer sein.', r: 'Fertig! Deine Listen stehen jetzt ganz oben als große Karten. Lange drücken → „Wirklich löschen“ oder „Abbrechen“.' },
+    en: { t: 'Vocabulary lists: press and hold to delete, lists on top and bigger', x: 'Press and hold your own list, then delete it after a “Really?” question. Your own lists should be at the top and bigger.', r: 'Done! Your lists are now at the very top as big cards. Press and hold → “Really delete” or “Cancel”.' } },
+  { id: 'I-007', s: 'fertig', a: 'lernmix', d: '2026-11-03', u: '2026-11-03', by: [],
+    de: { t: 'Mehr Vokabeln per Foto zu einer Liste hinzufügen', x: 'Einer vorhandenen Liste noch mehr Wörter mit Fotos hinzufügen – und auf der Seite „Fertig!“ gleich „Weitere Vokabeln hinzufügen“.', r: 'Fertig! Auf der Seite deiner Liste gibt es „Mehr Wörter hinzufügen“, und nach dem Eintragen fotografierst du mit „Weitere Vokabeln hinzufügen“ gleich die nächste Seite in dieselbe Liste.' },
+    en: { t: 'Add more words to a list with photos', x: 'Add more words to an existing list with photos – and right on the “Done!” page: “Add more words”.', r: 'Done! Your list page has “Add more words”, and after saving you can photograph the next page into the same list with “Add more words”.' } },
 ];
