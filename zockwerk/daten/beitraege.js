@@ -4,6 +4,21 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b8', d: '2026-11-06', k: 'neu', ic: 'star',
+    de: { t: 'Lernen bringt Münzen + Werbetafeln in Baumix',
+      x: 'Zwei Ideen aus der Familie sind eingebaut.\n\n- **Lernen bringt Münzen:** jede fertig gelesene Lektion in Lernmix, jede gute Übung und das Vokabel-Tagesziel geben Münzen für Zockmix – bis zu 150 am Tag\n- **Werbetafeln in Baumix:** in den Städten wechseln Zocki, Lumi und Tipps zur App alle paar Sekunden\n- in der Großstadt steht ein **Zockmix-Hochhaus** mit riesigen Bannern\n\nKommt mit dem nächsten Update.' },
+    en: { t: 'Learning earns coins + billboards in Baumix',
+      x: 'Two ideas from the family are in.\n\n- **Learning earns coins:** every lesson you finish in Lernmix, every good practice round and your daily vocabulary goal give you Zockmix coins – up to 150 a day\n- **Billboards in Baumix:** in the towns, Zocki, Lumi and tips about the app change every few seconds\n- the big city has a **Zockmix tower** with huge banners\n\nComing with the next update.' } },
+  { id: 'b7', d: '2026-11-04', k: 'update', ic: 'sparkle',
+    de: { t: 'Rohr-Meister: flüssiger, neuer Look, schwerer',
+      x: 'Rohr-Meister ist überarbeitet.\n\n- läuft viel flüssiger\n- neuer Look: Erde in Schichten, kräftige Gang-Ränder, glänzendes Wasser\n- Edelsteine statt Blumen: ausgraben bringt Münzen\n- weniger Wasser, Sterne gibt es fürs Wassersparen' },
+    en: { t: 'Pipe Master: smoother, new look, harder',
+      x: 'Pipe Master got a makeover.\n\n- runs much smoother\n- new look: earth in layers, bold tunnel edges, shiny water\n- gems instead of flowers: dig them out for coins\n- less water, stars are for saving water' } },
+  { id: 'b6', d: '2026-11-04', k: 'update', ic: 'home',
+    de: { t: 'Baumix: neue Etage in jedem Hochhaus',
+      x: 'Auf dem Dach eines Hochhauses führt jetzt eine Tür im Treppenhaus eine Etage nach unten.\n\n- jedes Hochhaus ist anders eingerichtet: Büro, Spielecke, Wohnung über den Dächern oder Sky-Lounge\n- Computer, Kicker, Klavier und Billard kannst du dort benutzen\n- rundherum Fenster mit Blick über die Stadt\n- außerdem repariert: Taxi-Bewertung, Springen auf Möbel, Aufzug auf dem Dach, Schaukel' },
+    en: { t: 'Baumix: a new floor in every skyscraper',
+      x: 'On a skyscraper roof, a door in the stair house now leads one floor down.\n\n- every tower is furnished differently: office, play corner, penthouse or sky lounge\n- you can use the computer, foosball, piano and pool table there\n- windows all around with a view over the city\n- also fixed: taxi rating, jumping onto furniture, the roof elevator, the swing' } },
   { id: 'b5', d: '2026-11-03', k: 'update', ic: 'sparkle',
     de: { t: 'Lernmix: Vokabel-Fotos fast fehlerfrei',
       x: 'Lumi liest Vokabel-Seiten aus deinem Englischbuch jetzt viel genauer.\n\n- keine zufälligen Zeichen mehr wie „I] Internat“ oder „pp.8/9“\n- gewölbte Seiten und gelbe Grammatik-Kästen bringen nichts mehr durcheinander\n- Beispielsätze und Hinweise aus dem Buch werden sauberer gelesen\n- deine Listen stehen ganz oben: lange drücken = löschen\n- „Weitere Vokabeln hinzufügen“: die nächste Seite kommt in dieselbe Liste\n\n[Zum Fehler](#fehler/F-008)' },
