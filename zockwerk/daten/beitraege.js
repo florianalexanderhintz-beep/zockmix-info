@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b10', d: '2026-11-07', k: 'neu', ic: 'star',
+    de: { t: 'Lernmix: Potenzen und Terme für Klasse 7',
+      x: 'In Mathe Klasse 7 gibt es zwei neue, ausführliche Kapitel.\n\n- **Potenzrechnung:** Basis und Exponent, negative Exponenten, alle Potenzgesetze, Potenzen potenzieren, Zehnerpotenzen und wissenschaftliche Schreibweise – dazu ein Training für die Probe\n- **Terme, Gleichungen, Ungleichungen:** Grundwissen, gleichartige Terme zusammenfassen, Ungleichungen\n- jede Übungsrunde bringt neue Zahlen\n- Lumis Laden ist ruhiger geworden und zeigt dir gleich die nächste Lektion\n\nKommt mit dem nächsten Update.' },
+    en: { t: 'Lernmix: powers and terms for grade 7',
+      x: 'Math grade 7 has two new detailed chapters (Lernmix is in German).\n\n- **Powers:** base and exponent, negative exponents, all the rules, powers of powers, powers of ten and scientific notation – plus training for tests\n- **Terms, equations, inequalities:** the basics, combining like terms, inequalities\n- every practice round brings new numbers\n- Lumi’s shop is calmer now and shows you the next lesson right away\n\nComing with the next update.' } },
   { id: 'b9', d: '2026-11-07', k: 'neu', ic: 'crown',
     de: { t: 'Lernmix: Lumi-Münzen und Lumis Laden',
       x: 'Wer in Lernmix lernt, bekommt jetzt **Lumi-Münzen** – und kauft damit in **Lumis Laden** ein.\n\n- **Kleidung für Lumi:** 25 Sachen, zum Beispiel Bommelmütze, Krone, Sonnenbrille, Heldenmaske, Schal, Umhang, Raketenrucksack und Flügel\n- **Farben:** Tiger, Zebra, Marienkäfer, Regenbogen, Galaxie, Gold und viele mehr\n- **Designs:** Ozean, Dschungel, Weltall, Vulkan und andere färben ganz Lernmix\n- Antippen = Lumi probiert es gleich an\n- bis zu 150 Münzen am Tag, für deine Lern-Serie gibt es extra\n- nur feste Preise, keine Überraschungs-Kisten\n\nDie Münzen gelten nur in Lernmix (statt der Zockmix-Münzen aus der letzten Neuigkeit). Kommt mit dem nächsten Update.' },
