@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b11', d: '2026-11-08', k: 'neu', ic: 'star',
+    de: { t: 'Lernmix: Mein Heft',
+      x: 'Wichtiges kannst du dir jetzt markieren – wie im Schulheft.\n\n- tippe auf das **Lesezeichen** bei einem Abschnitt der Lektion, einem Merksatz oder nach einer Aufgabe\n- nachlesen kannst du alles im Fach unter **„Mein Heft“**, zum Beispiel in Mathe\n- nach jeder Antwort lässt sich **„Warum ist das richtig/falsch?“** aufklappen\n- Lumis Laden findest du auf der Startseite (mit × ausblendbar) und groß auf der Ich-Seite\n\nKommt mit dem nächsten Update.' },
+    en: { t: 'Lernmix: My notebook',
+      x: 'You can now mark important things – just like in your school notebook (Lernmix is in German).\n\n- tap the **bookmark** on a part of a lesson, a rule or after a task\n- read it all again in each subject under **“My notebook”**, for example in math\n- after each answer, you can open **“Why is this right/wrong?”**\n- Lumi’s shop is on the home page (hide it with ×) and big on the “Me” page\n\nComing with the next update.' } },
   { id: 'b10', d: '2026-11-07', k: 'neu', ic: 'star',
     de: { t: 'Lernmix: Potenzen und Terme für Klasse 7',
       x: 'In Mathe Klasse 7 gibt es zwei neue, ausführliche Kapitel.\n\n- **Potenzrechnung:** Basis und Exponent, negative Exponenten, alle Potenzgesetze, Potenzen potenzieren, Zehnerpotenzen und wissenschaftliche Schreibweise – dazu ein Training für die Probe\n- **Terme, Gleichungen, Ungleichungen:** Grundwissen, gleichartige Terme zusammenfassen, Ungleichungen\n- jede Übungsrunde bringt neue Zahlen\n- Lumis Laden ist ruhiger geworden und zeigt dir gleich die nächste Lektion\n\nKommt mit dem nächsten Update.' },
