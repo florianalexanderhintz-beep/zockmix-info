@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b13', d: '2026-11-10', k: 'neu', ic: 'star',
+    de: { t: 'Neu: Kugel-Labyrinth + Königs-Rettung in 3D',
+      x: 'Zwei große Neuigkeiten.\n\n- **Kugel-Labyrinth (neu):** ein Holz-Labyrinth in 3D – Brett mit dem Finger kippen und die Stahlkugel ins Ziel rollen, mit Sternen, Toren, Eis, Filz und Einbahn-Klappen\n- alle 5 Level wartet ein Riesen-Labyrinth, dazu 5 Kugeln zum Freischalten\n- **Königs-Rettung in 3D:** das Schiebe-Rätsel spielt jetzt in einer Burg-Kammer mit Fackel-Licht, schweren Blöcken und dem König hinter Gittern\n- die Rätsel der Königs-Rettung sind gleich geblieben, dein Level bleibt' },
+    en: { t: 'New: Marble Maze + Royal Rescue in 3D',
+      x: 'Two big things.\n\n- **Marble Maze (new):** a wooden maze in 3D – tilt the board with your finger and roll the steel ball to the goal, with stars, gates, ice, felt and one-way flaps\n- every 5 levels a giant maze is waiting, plus 5 marbles to unlock\n- **Royal Rescue in 3D:** the block puzzle now plays in a castle chamber with torch light, heavy blocks and the king behind bars\n- the Royal Rescue puzzles are the same, your level stays' } },
   { id: 'b12', d: '2026-11-10', k: 'update', ic: 'sparkle',
     de: { t: 'Drei Spiele sehen jetzt echt aus',
       x: 'Stapel-Hof, Bowling-Bahn und Wimmel-Suche sind neu gestaltet – realistischer und schöner.\n\n- **Stapel-Hof:** echte Wiese mit Gras und Blumen im Wind, Feldwege, weiche Schatten, neue Gebäude, Bauer und Tiere mit echten Proportionen\n- **Bowling-Bahn:** echte Halle mit glänzendem Parkett, in dem sich Pins und Kugel spiegeln, dazu neue Pins und Kugeln\n- **Wimmel-Suche:** gemalt wie ein Bilderbuch – Licht und Schatten, echte Stoffe, alle 15 Orte neu\n- Level und Spielstand bleiben gleich' },
