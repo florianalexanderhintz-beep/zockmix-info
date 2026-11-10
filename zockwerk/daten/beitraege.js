@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b12', d: '2026-11-10', k: 'update', ic: 'sparkle',
+    de: { t: 'Drei Spiele sehen jetzt echt aus',
+      x: 'Stapel-Hof, Bowling-Bahn und Wimmel-Suche sind neu gestaltet – realistischer und schöner.\n\n- **Stapel-Hof:** echte Wiese mit Gras und Blumen im Wind, Feldwege, weiche Schatten, neue Gebäude, Bauer und Tiere mit echten Proportionen\n- **Bowling-Bahn:** echte Halle mit glänzendem Parkett, in dem sich Pins und Kugel spiegeln, dazu neue Pins und Kugeln\n- **Wimmel-Suche:** gemalt wie ein Bilderbuch – Licht und Schatten, echte Stoffe, alle 15 Orte neu\n- Level und Spielstand bleiben gleich' },
+    en: { t: 'Three games look real now',
+      x: 'Stack Farm, Bowling Lane and Picture Hunt got a new, more realistic look.\n\n- **Stack Farm:** a real meadow with grass and flowers in the wind, dirt paths, soft shadows, new buildings, a farmer and animals with real proportions\n- **Bowling Lane:** a real hall with shiny parquet that mirrors pins and ball, plus new pins and balls\n- **Picture Hunt:** painted like a picture book – light and shadow, real materials, all 15 places new\n- levels and your progress stay the same' } },
   { id: 'b11', d: '2026-11-08', k: 'neu', ic: 'star',
     de: { t: 'Lernmix: Mein Heft',
       x: 'Wichtiges kannst du dir jetzt markieren – wie im Schulheft.\n\n- tippe auf das **Lesezeichen** bei einem Abschnitt der Lektion, einem Merksatz oder nach einer Aufgabe\n- nachlesen kannst du alles im Fach unter **„Mein Heft“**, zum Beispiel in Mathe\n- nach jeder Antwort lässt sich **„Warum ist das richtig/falsch?“** aufklappen\n- Lumis Laden findest du auf der Startseite (mit × ausblendbar) und groß auf der Ich-Seite\n\nKommt mit dem nächsten Update.' },
