@@ -4,6 +4,11 @@
    [Link-Text](#fehler/F-003) springt in der Hilfe, [Link-Text](https://…) öffnet eine Webseite. Englisch darf fehlen (dann Deutsch). */
 window.ZH = window.ZH || {};
 ZH.posts = [
+  { id: 'b14', d: '2026-11-11', k: 'neu', ic: 'star',
+    de: { t: 'Mini-Golf: 100 Bälle und 4 neue Welten',
+      x: 'Mini-Golf ist viel abwechslungsreicher geworden.\n\n- **100 Bälle bis Level 500:** Obst, Tiere mit Gesicht, Sportbälle, Planeten, Metalle und Edelsteine mit echten Facetten\n- **viele Bälle bewegen sich:** Regenbogen, Feuer, Blitz, Disco, Polarlicht, Feuerwerk, Sonne, Schwarzes Loch und mehr – der letzte bei Level 500 ist die Zockmix-Legende\n- **4 neue Welten:** Bauernhof, Piraten-Bucht, Herbst-Wald und Mond-Station\n- **echte Tiere:** Vögel mit Flügelschlag statt schwarzer Kästchen, dazu Enten, Krebse, springende Fische, Pinguine, Hühner und Papageien\n- **manchmal eine Abkürzung:** schmal und ohne Bande – traust du dich?' },
+    en: { t: 'Mini Golf: 100 balls and 4 new worlds',
+      x: 'Mini Golf has a lot more variety now.\n\n- **100 balls up to level 500:** fruit, animals with faces, sports balls, planets, metals and gems with real facets\n- **many balls move:** rainbow, fire, lightning, disco, northern lights, fireworks, sun, black hole and more – the last one at level 500 is the Zockmix Legend\n- **4 new worlds:** Farm, Pirate Cove, Autumn Woods and Moon Base\n- **real animals:** birds that flap their wings instead of black boxes, plus ducks, crabs, jumping fish, penguins, chickens and parrots\n- **sometimes a shortcut:** narrow and without walls – dare to try?' } },
   { id: 'b13', d: '2026-11-10', k: 'neu', ic: 'star',
     de: { t: 'Neu: Kugel-Labyrinth + Königs-Rettung in 3D',
       x: 'Zwei große Neuigkeiten.\n\n- **Kugel-Labyrinth (neu):** ein Holz-Labyrinth in 3D – Brett mit dem Finger kippen und die Stahlkugel ins Ziel rollen, mit Sternen, Toren, Eis, Filz und Einbahn-Klappen\n- alle 5 Level wartet ein Riesen-Labyrinth, dazu 5 Kugeln zum Freischalten\n- **Königs-Rettung in 3D:** das Schiebe-Rätsel spielt jetzt in einer Burg-Kammer mit Fackel-Licht, schweren Blöcken und dem König hinter Gittern\n- die Rätsel der Königs-Rettung sind gleich geblieben, dein Level bleibt' },
