@@ -41,6 +41,34 @@
   const area = k => AREAS.find(a => a[0] === k) || AREAS[AREAS.length - 1];
   const areaName = k => { const a = area(k); return T(a[1], a[2]); };
   const areaTag = k => '<span class="area" style="--a:' + area(k)[3] + '">' + esc(areaName(k)) + '</span>';
+  // Kachel-Bilder aus Zockmix (js/spiele.js + img/kacheln.webp, gemacht mit tools/kacheln.js): alle Spiele, Bereiche und Simulatoren
+  const G = window.ZHG || { cols: 1, rows: 1, games: [], apps: [] };
+  const GAMES = G.games.map(g => ({ id: g[0], de: g[1], en: g[2], cat: g[3], n: g[4] })), GAPPS = G.apps.map(g => ({ id: g[0], de: g[1], en: g[2], n: g[3] }));
+  const tileOf = id => GAMES.find(g => g.id === id) || GAPPS.find(g => g.id === id);
+  const tName = t => (t ? T(t.de, t.en) : '');
+  const SIMS = ['handysim', 'pcsim', 'konsolensim'];
+  const CATS = [['action', 'Renn- & Action-Spiele', 'Racing & Action Games'], ['knobel', 'Knobel-Spiele', 'Puzzle Games'], ['strat', 'Strategie & Geschick', 'Strategy & Skill']];
+  // Auswahl „Welches Spiel?“ gibt es bei Spiele und Simulatoren
+  const pickList = a => (a === 'spiele' ? GAMES : a === 'sim' ? GAPPS.filter(t => SIMS.includes(t.id)) : []);
+  function art(id, cls) {
+    const t = tileOf(id); if (!t) return '';
+    const x = (t.n % G.cols) * 100 / Math.max(1, G.cols - 1), y = Math.floor(t.n / G.cols) * 100 / Math.max(1, G.rows - 1);
+    return '<span class="art' + (cls ? ' ' + cls : '') + '" style="background-position:' + x.toFixed(3) + '% ' + y.toFixed(3) + '%;background-size:' + G.cols * 100 + '% ' + G.rows * 100 + '%" aria-hidden="true"></span>';
+  }
+  // Bild eines Bereichs: die Zockmix-Kachel (Bereiche unter „Mehr Spaß“) oder ein eigenes Bildchen auf seiner Farbe (Spiele, Startseite, Sonstiges)
+  const AART = { zocki: 'zocki', chillmix: 'chillmix', spukmix: 'spukmix', baumix: 'baumix', burg: 'burg', beatmix: 'beatmix', malmix: 'malmix', quizmix: 'quizmix', lernmix: 'lernmix', sim: 'pcsim' };
+  const AICON = { spiele: 'gamepad', app: 'home', sonst: 'help' }, ACOL = { spiele: '#ff7a3a', app: '#4f7dff', sonst: '#8a6cff' };
+  const areaArt = (k, cls, ic) => (!ic && AART[k] && tileOf(AART[k]) ? art(AART[k], cls)
+    : '<span class="art ico' + (cls ? ' ' + cls : '') + '" style="--a:' + (ACOL[k] || area(k)[3]) + '" aria-hidden="true">' + I(ic || AICON[k] || 'help') + '</span>');
+  // Spiel zu einem Fehler/einer Idee: Feld g oder der Name in „wo“ (z. B. „Rohr-Meister“) – nur passend zum Bereich
+  function gameOf(x) {
+    if (!x) return '';
+    const l = pickList(x.a); if (x.g && l.some(t => t.id === x.g)) return x.g;
+    const w = fold((x.de && x.de.w) || '') + ' ' + fold((x.en && x.en.w) || ''); if (!w.trim()) return '';
+    const t = l.find(t => w.includes(fold(t.de)) || w.includes(fold(t.en)));
+    return t ? t.id : '';
+  }
+  const thumb = x => { const g = gameOf(x); return g ? art(g, 'th') : areaArt(x.a, 'th'); };
   // Stand: [Bildchen, Deutsch, Englisch, Farbe, läuft gerade (pulsiert)]
   const BS = { offen: ['flag', 'Gemeldet', 'Reported', '#ff6b7a', 0], pruef: ['search', 'Wird geprüft', 'Checking', '#ffb84d', 1],
     arbeit: ['cog', 'Wird repariert', 'Being fixed', '#5aa8ff', 1], fertig: ['check', 'Behoben', 'Fixed', '#3ddc78', 0], kein: ['info', 'Kein Fehler', 'Not a bug', '#a3adcc', 0] };
@@ -79,9 +107,10 @@
   const EXK = { test: 'flask', tipp: 'map', hilfe: 'heart' };
 
   const posts = (ZH.posts || []).slice().sort((a, b) => String(b.d).localeCompare(String(a.d)));
-  const bugs = ZH.bugs || [], ideas = ZH.ideas || [], faq = ZH.faq || [], helpers = ZH.helpers || [];
+  const bugs = ZH.bugs || [], ideas = ZH.ideas || [], faq = ZH.faq || [], helpers = ZH.helpers || [], guides = ZH.guides || [];
+  const ACT = b => b.s === 'offen' || b.s === 'pruef' || b.s === 'arbeit';   // Fehler, die es gerade noch gibt
   const byId = id => helpers.find(h => h.id === id);
-  const findAny = id => bugs.find(x => x.id === id) || ideas.find(x => x.id === id) || posts.find(x => x.id === id);
+  const findAny = id => bugs.find(x => x.id === id) || ideas.find(x => x.id === id) || posts.find(x => x.id === id) || guides.find(x => x.id === id);
 
   // ---------- Likes/Stimmen ohne Server: gemerkt auf dem Handy (zmh-likes { id: { b: Zahl beim Liken, s: 1 = verschickt } }),
   // gezählt werden sie erst, wenn man sie per E-Mail schickt (Leiste #vbar). Angezeigt: offizielle Zahl (Beitrag l, Idee v, Fehler n),
@@ -170,14 +199,17 @@
   LS.set('seen', today);
   const isNew = (...ds) => !!prevSeen && ds.some(d => d && d > prevSeen);
   const newBadge = (...ds) => (isNew(...ds) ? ' <span class="new">' + T('NEU', 'NEW') + '</span>' : '');
-  const dots = { start: posts.some(p => isNew(p.d)), fehler: bugs.some(b => isNew(b.d, b.f, b.u)), ideen: ideas.some(x => isNew(x.d, x.u)) };
+  const dots = { start: posts.some(p => isNew(p.d)) || guides.some(a => isNew(a.d)), fehler: bugs.some(b => ACT(b) && isNew(b.d, b.u)), ideen: ideas.some(x => isNew(x.d, x.u)) };
 
   // ---------- Zustand ----------
   const TABS = ['start', 'fehler', 'melden', 'ideen', 'helfer'];
   const TL = { start: ['home', 'Start', 'Home'], fehler: ['bug', 'Fehler', 'Bugs'], melden: ['send', 'Melden', 'Report'], ideen: ['bulb', 'Ideen', 'Ideas'], helfer: ['trophy', 'Helfer', 'Helpers'] };
+  // Unterseiten ohne eigenen Reiter (unten leuchtet dann der Reiter daneben): #artikel, #artikel/a3
+  const PAGES = { artikel: 'start' };
+  const tabOf = v => PAGES[v] || v, posOf = v => (PAGES[v] ? TABS.indexOf(PAGES[v]) + 0.5 : TABS.indexOf(v));
   let cur = '', focusId = '', introDone = false;
-  const st = { bf: 'alle', ba: '', bq: '', idf: 'alle', thx: false, burst: false };
-  const D0 = () => ({ k: 'fehler', ref: '', a: '', w: '', x: '', st: '', oft: '', dev: '', ver: '', log: '', nick: '', pub: false });
+  const st = { bf: 'alle', ba: '', bq: '', idf: 'alle', thx: false, burst: false, gq: '', allPosts: false };
+  const D0 = () => ({ k: 'fehler', ref: '', a: '', g: '', w: '', x: '', st: '', oft: '', dev: '', ver: '', log: '', nick: '', pub: false });
   let draft = Object.assign(D0(), LS.get('draft', {}) || {});
   let saveT = 0;
   const saveDraft = () => { clearTimeout(saveT); saveT = setTimeout(() => LS.set('draft', draft), 300); };
@@ -193,14 +225,15 @@
         '<i>' + I(TL[t][0]) + '</i><span></span><b class="dot" hidden></b></a>').join('');
       tb.dataset.ok = '1';
     }
+    const ct = tabOf(cur);
     $$('#tabs a').forEach(a => {
-      const t = a.dataset.tab, on = t === cur;
+      const t = a.dataset.tab, on = t === ct;
       a.querySelector('span').textContent = T(TL[t][1], TL[t][2]);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
       a.querySelector('.dot').hidden = !(dots[t] && !on);
     });
-    tb.style.setProperty('--i', TABS.indexOf(cur));
-    tb.classList.toggle('onmid', cur === 'melden');
+    tb.style.setProperty('--i', TABS.indexOf(ct));
+    tb.classList.toggle('onmid', ct === 'melden');
   }
 
   // ---------- Reiter: Start ----------
@@ -232,14 +265,18 @@
       '<button class="btn ghost sm" id="instBtn"' + (instEv ? '' : ' hidden') + '>' + I('download') + T('Als App aufs Handy', 'Add to your phone') + '</button>' +
       '</section>' +
       '<div class="stats">' +
-      '<a href="#fehler" data-bf="fertig" class="stat rv" style="--c:#3ddc78">' + I('check') + '<b data-count="' + fixed + '">' + fixed + '</b><span>' + T('Fehler behoben', 'bugs fixed') + '</span></a>' +
+      '<a href="#fehler/behoben" class="stat rv" style="--c:#3ddc78">' + I('check') + '<b data-count="' + fixed + '">' + fixed + '</b><span>' + T('Fehler behoben', 'bugs fixed') + '</span></a>' +
       '<a href="#fehler" data-bf="arbeit" class="stat rv" style="--c:#5aa8ff">' + I('cog', 'spin') + '<b data-count="' + work + '">' + work + '</b><span>' + T('in Arbeit', 'in progress') + '</span></a>' +
       '<a href="#ideen" data-if="fertig" class="stat rv" style="--c:#ffc93d">' + I('sparkle') + '<b data-count="' + done + '">' + done + '</b><span>' + T('Ideen fertig', 'ideas done') + '</span></a></div>' +
       (nowL.length || doneL.length ? '<h2 class="rv">' + I('cog') + T('Aus der Werkstatt', 'From the workshop') + '</h2><div class="card work rv">' +
         (nowL.length ? '<h3>' + T('Gerade dran', 'Working on it') + '</h3>' + nowL.map(row).join('') : '') +
         (doneL.length ? '<h3>' + T('Zuletzt fertig', 'Recently done') + '</h3>' + doneL.map(row).join('') : '') + '</div>' : '') +
+      (guides.length ? '<h2 class="rv">' + I('map') + T('Zockwerk-Artikel', 'Zockwerk articles') + '<a class="h2more" href="#artikel">' + T('Alle', 'All') + I('arrow') + '</a></h2>' +
+        '<div class="hrow rv">' + guides.map(gCard).join('') + '<a class="acard all" href="#artikel">' + I('arrow') + '<b>' + T('Alle Artikel', 'All articles') + '</b></a></div>' : '') +
       '<h2 class="rv">' + I('news') + T('Neuigkeiten', 'News') + '</h2>' +
-      (posts.length ? posts.map(post).join('') : '<p class="empty">' + T('Noch keine Beiträge.', 'No posts yet.') + '</p>') +
+      (posts.length ? posts.slice(0, st.allPosts ? posts.length : PN).map(post).join('') +
+        (!st.allPosts && posts.length > PN ? '<button class="btn ghost wide rv" id="pmore">' + I('chev') + T('Ältere Neuigkeiten zeigen', 'Show older news') + ' (' + (posts.length - PN) + ')</button>' : '')
+        : '<p class="empty">' + T('Noch keine Beiträge.', 'No posts yet.') + '</p>') +
       '<h2 class="rv">' + I('help') + T('Häufige Fragen', 'Questions') + '</h2><div class="faq">' +
       faq.map(f => '<details class="rv"><summary>' + esc(F(f, 'q')) + I('chev', 'chev') + '</summary><div class="tx">' + md(F(f, 'a')) + '</div></details>').join('') + '</div>' +
       about();
@@ -254,6 +291,29 @@
       (long ? '<button class="more" data-more>' + T('Weiterlesen', 'Read more') + I('chev') + '</button>' : '') +
       '<div class="pfoot">' + likeBtn(p.id, 'heart') + '</div></article>';
   }
+  const PN = 4;   // so viele Neuigkeiten zeigt der Start zuerst, der Rest kommt mit „Ältere Neuigkeiten zeigen“
+
+  // ---------- Zockwerk-Artikel (Startseite + Seite #artikel, Daten: daten/artikel.js) ----------
+  const gArt = (a, cls) => (a.g && tileOf(a.g) ? art(a.g, cls) : areaArt(a.a, cls, a.ic));
+  const kTag = k => '<span class="tag" style="--c:' + k[3] + '">' + T(k[1], k[2]) + '</span>';
+  function gCard(a) {
+    return '<a class="acard" href="#artikel/' + esc(a.id) + '">' + gArt(a) + '<span class="at"><span class="am">' + kTag(PK[a.k] || PK.info) + newBadge(a.d) + '</span><b>' + esc(F(a, 't')) + '</b></span></a>';
+  }
+  function vArticles() {
+    const a = guides.find(x => x.id === focusId);
+    if (!a) {
+      return head('map', '#5fd8ff', T('Zockwerk-Artikel', 'Zockwerk articles'), T('Anleitungen und Tipps rund um Zockmix – damit du noch mehr Spaß hast.', 'Guides and tips all about Zockmix – so you have even more fun.')) +
+        guides.map(x => '<a class="card arow rv" href="#artikel/' + esc(x.id) + '">' + gArt(x) + '<span class="wt"><span class="am">' + kTag(PK[x.k] || PK.info) + newBadge(x.d) + '</span><b>' + esc(F(x, 't')) + '</b><small>' + esc(F(x, 's')) + '</small></span>' + I('arrow', 'go') + '</a>').join('') +
+        '<div class="card cta rv"><p>' + T('Wünschst du dir einen Artikel zu einem Thema?', 'Want an article about a topic?') + '</p><a class="btn" href="#melden" data-k="idee">' + I('bulb') + T('Schreib es uns', 'Tell us') + '</a></div>';
+    }
+    const more = guides.filter(x => x !== a);
+    return '<a class="back rv" href="#artikel">' + I('arrow', 'flip') + T('Alle Artikel', 'All articles') + '</a>' +
+      '<article class="card read rv">' + gArt(a, 'hero') + '<div class="meta">' + kTag(PK[a.k] || PK.info) + areaTag(a.a) + newBadge(a.d) + '</div>' +
+      '<h1 class="vh">' + esc(F(a, 't')) + '</h1><p class="lead2">' + esc(F(a, 's')) + '</p><div class="tx">' + md(F(a, 'x')) + '</div>' +
+      '<div class="pfoot">' + likeBtn(a.id, 'heart') + '</div></article>' +
+      '<div class="card cta rv"><p>' + T('Noch eine Frage dazu?', 'Still have a question?') + '</p><a class="btn" href="#melden" data-k="frage" data-a="' + esc(a.a) + '">' + I('help') + T('Frage stellen', 'Ask a question') + '</a></div>' +
+      (more.length ? '<h2 class="rv">' + I('map') + T('Mehr Artikel', 'More articles') + '</h2><div class="hrow rv">' + more.map(gCard).join('') + '</div>' : '');
+  }
   function about() {
     return '<details class="card about rv"><summary>' + I('lock') + T('Über diese Seite', 'About this page') + I('chev', 'chev') + '</summary><div class="tx">' +
       md(T('Das Zockwerk **sammelt keine Daten**: keine Anmeldung, keine Cookies, keine Werbung, keine Statistik. Nur auf deinem Handy merkt es sich deine Sprache, deinen Entwurf beim Melden, deine Likes und deinen Helfer-Code – das kannst du jederzeit löschen.\n\nWenn du etwas meldest, öffnet sich dein E-Mail-Programm mit dem fertigen Text. Du siehst genau, was drinsteht, und schickst es selbst ab. Wir nutzen deine E-Mail nur, um dir zu antworten.',
@@ -265,23 +325,40 @@
   }
 
   // ---------- Reiter: Fehler ----------
-  const BGRP = { alle: null, offen: ['offen', 'pruef'], arbeit: ['arbeit'], fertig: ['fertig', 'kein'] };
+  // Die Liste zeigt nur Fehler, die es gerade noch gibt. Behobene (und „kein Fehler“) verschwinden von dort und stehen nur noch
+  // zugeklappt unter „Schon behoben“ (Direkt-Links wie #fehler/F-003 zeigen sie oben; #fehler/behoben klappt die Liste auf).
+  const BGRP = { alle: null, offen: ['offen', 'pruef'], arbeit: ['arbeit'] };
   const BORD = { arbeit: 0, pruef: 1, offen: 2, fertig: 3, kein: 4 };
   function vBugs() {
-    const cnt = g => bugs.filter(b => !BGRP[g] || BGRP[g].includes(b.s)).length;
-    const used = AREAS.filter(a => bugs.some(b => b.a === a[0]));
-    return head('bug', '#ff6b7a', T('Bekannte Fehler', 'Known bugs'), T('Diese Fehler kennen wir schon. Hier sieht jeder, was gerade repariert wird.', 'We already know about these bugs. Everyone can see what’s being fixed right now.')) +
-      '<div class="tools rv"><label class="sbox">' + I('search') + '<input type="search" id="bq" value="' + esc(st.bq) + '" placeholder="' + T('Suchen …', 'Search …') + '" aria-label="' + T('Fehler suchen', 'Search bugs') + '"></label>' +
-      '<select id="ba" aria-label="' + T('Bereich', 'Area') + '"><option value="">' + T('Alle Bereiche', 'All areas') + '</option>' +
-      used.map(a => '<option value="' + a[0] + '"' + (st.ba === a[0] ? ' selected' : '') + '>' + esc(areaName(a[0])) + '</option>').join('') + '</select></div>' +
-      '<div class="chips rv" role="group">' + [['alle', 'Alle', 'All'], ['offen', 'Offen', 'Open'], ['arbeit', 'In Arbeit', 'Being fixed'], ['fertig', 'Erledigt', 'Done']]
-        .map(c => '<button data-bf="' + c[0] + '" aria-pressed="' + (st.bf === c[0]) + '">' + T(c[1], c[2]) + ' <small>' + cnt(c[0]) + '</small></button>').join('') + '</div>' +
-      '<div id="blist">' + bugList() + '</div>' +
+    if (!(st.bf in BGRP)) st.bf = 'alle';
+    const act = bugs.filter(ACT), gone = bugs.filter(b => !ACT(b)).sort((a, b) => String(b.f || b.u || b.d).localeCompare(String(a.f || a.u || a.d)));
+    const cnt = g => act.filter(b => !BGRP[g] || BGRP[g].includes(b.s)).length;
+    const used = AREAS.filter(a => act.some(b => b.a === a[0]));
+    if (st.ba && !used.some(a => a[0] === st.ba)) st.ba = '';
+    const hit = focusId && gone.find(b => b.id === focusId);
+    return head('bug', '#ff6b7a', T('Bekannte Fehler', 'Known bugs'), T('Diese Fehler gibt es gerade noch – wir kümmern uns darum. Ist einer behoben, verschwindet er von hier.',
+      'These bugs still exist right now – we’re on it. Once a bug is fixed, it disappears from here.')) +
+      (hit ? '<p class="fhint rv">' + I('check') + T('Dieser Fehler ist schon behoben:', 'This bug is already fixed:') + '</p>' + bug(hit) : '') +
+      (act.length ? (act.length > 4 ? '<div class="tools rv"><label class="sbox">' + I('search') + '<input type="search" id="bq" value="' + esc(st.bq) + '" placeholder="' + T('Suchen …', 'Search …') + '" aria-label="' + T('Fehler suchen', 'Search bugs') + '"></label></div>' : '') +
+        (used.length > 1 ? '<div class="chips achips rv" role="group" aria-label="' + T('Bereich', 'Area') + '"><button data-ba="" aria-pressed="' + !st.ba + '">' + T('Alle Bereiche', 'All areas') + '</button>' +
+          used.map(a => '<button data-ba="' + a[0] + '" aria-pressed="' + (st.ba === a[0]) + '">' + areaArt(a[0], 'xs') + esc(areaName(a[0])) + '</button>').join('') + '</div>' : '') +
+        '<div class="chips rv" role="group">' + [['alle', 'Alle', 'All'], ['offen', 'Gemeldet', 'Reported'], ['arbeit', 'Wird repariert', 'Being fixed']]
+          .map(c => '<button data-bf="' + c[0] + '" aria-pressed="' + (st.bf === c[0]) + '">' + T(c[1], c[2]) + ' <small>' + cnt(c[0]) + '</small></button>').join('') + '</div>' +
+        '<div id="blist">' + bugList() + '</div>'
+        : '<div class="card allgood rv">' + emb('check', '#3ddc78', 'big') + '<h3>' + T('Gerade ist kein Fehler bekannt!', 'No known bugs right now!') + '</h3><p>' +
+          T('Alles, was ihr gemeldet habt, ist repariert. Danke fürs Melden!', 'Everything you reported has been fixed. Thanks for reporting!') + '</p></div>') +
+      (gone.length ? fixedBox(gone) : '') +
       '<div class="card cta rv"><p>' + T('Dein Fehler ist nicht dabei?', 'Your bug isn’t listed?') + '</p><a class="btn" href="#melden" data-k="fehler">' + I('bug') + T('Fehler melden', 'Report a bug') + '</a></div>';
+  }
+  function fixedBox(l) {
+    return '<details class="card fixed rv" id="i-behoben"' + (focusId === 'behoben' ? ' open' : '') + '><summary>' + emb('check', '#3ddc78') +
+      '<span class="wt">' + T('Schon behoben', 'Already fixed') + ' <b class="cnt">' + l.length + '</b><small>' + T('Diese Fehler sind weg – bitte Zockmix aktualisieren.', 'These bugs are gone – please update Zockmix.') + '</small></span>' + I('chev', 'chev') + '</summary>' +
+      '<div class="flist">' + l.map(b => '<a class="wrow" href="#fehler/' + esc(b.id) + '">' + thumb(b) + '<span class="wt">' + esc(F(b, 't')) + '<small>' + areaName(b.a) + ' · ' +
+        (b.s === 'kein' ? T('Kein Fehler', 'Not a bug') : T('behoben', 'fixed') + ' ' + fmtDate(b.f || b.d)) + '</small></span>' + I('arrow', 'go') + '</a>').join('') + '</div></details>';
   }
   function bugList() {
     const q = fold(st.bq).trim();
-    const l = bugs.filter(b => (!BGRP[st.bf] || BGRP[st.bf].includes(b.s)) && (!st.ba || b.a === st.ba) &&
+    const l = bugs.filter(b => ACT(b) && (!BGRP[st.bf] || BGRP[st.bf].includes(b.s)) && (!st.ba || b.a === st.ba) &&
       (!q || fold([b.id, F(b, 't'), F(b, 'w'), F(b, 'x'), F(b, 'h'), areaName(b.a)].join(' ')).includes(q)))
       .sort((a, b) => (BORD[a.s] - BORD[b.s]) || String(b.f || b.u || b.d).localeCompare(String(a.f || a.u || a.d)));
     return l.length ? l.map(bug).join('') : '<div class="empty rv">' + I('search', 'big') + '<p>' + T('Nichts gefunden.', 'Nothing found.') + '</p></div>';
@@ -297,7 +374,7 @@
     const s = BS[b.s] || BS.offen, h = F(b, 'h'), w = F(b, 'w'), done = b.s === 'fertig' || b.s === 'kein';
     return '<article class="card item rv' + (focusId === b.id ? ' hit' : '') + '" id="i-' + esc(b.id) + '" style="--c:' + s[3] + '">' +
       '<div class="ih">' + pill(s) + '<a class="iid" href="#fehler/' + esc(b.id) + '">' + esc(b.id) + '</a>' + newBadge(b.d, b.f, b.u) + '</div>' +
-      '<h3>' + esc(F(b, 't')) + '</h3>' +
+      '<div class="ttl">' + thumb(b) + '<h3>' + esc(F(b, 't')) + '</h3></div>' +
       '<div class="meta">' + areaTag(b.a) + (w ? '<span class="where">' + esc(w) + '</span>' : '') + '</div>' +
       (F(b, 'x') ? '<div class="tx">' + md(F(b, 'x')) + '</div>' : '') +
       (h ? '<div class="note tip">' + I('bulb') + '<span><b>' + T('Tipp', 'Tip') + ':</b> ' + inl(h) + '</span></div>' : '') +
@@ -327,7 +404,7 @@
     const s = IS[x.s] || IS.idee, r = F(x, 'r'), open = x.s !== 'fertig' && x.s !== 'nein';
     return '<article class="card item rv' + (focusId === x.id ? ' hit' : '') + '" id="i-' + esc(x.id) + '" style="--c:' + s[3] + '">' +
       '<div class="ih">' + pill(s) + '<a class="iid" href="#ideen/' + esc(x.id) + '">' + esc(x.id) + '</a>' + newBadge(x.d, x.u) + '</div>' +
-      '<h3>' + esc(F(x, 't')) + '</h3><div class="meta">' + areaTag(x.a) + '</div>' +
+      '<div class="ttl">' + thumb(x) + '<h3>' + esc(F(x, 't')) + '</h3></div><div class="meta">' + areaTag(x.a) + '</div>' +
       (F(x, 'x') ? '<div class="tx">' + md(F(x, 'x')) + '</div>' : '') +
       (r ? '<div class="note dev">' + I('chat') + '<span>' + inl(r) + '</span></div>' : '') +
       '<div class="ifoot">' + credit(x.by) + '<span class="acts2">' + (open ? '<button class="link sm" data-me="' + esc(x.id) + '">' + I('pencil') + T('Mehr dazu schreiben', 'Add your thoughts') + '</button>' + likeBtn(x.id, 'thumb')
@@ -356,10 +433,12 @@
         I(KINDS[key][0]) + '<span>' + T(KINDS[key][1], KINDS[key][2]) + '</span></label>').join('') + '</fieldset>' +
       (ref ? '<div class="refchip">' + I('link') + '<span>' + T('Gehört zu', 'About') + ' <b>' + esc(d.ref) + '</b>: ' + esc(F(ref, 't')) + '</span>' +
         '<button type="button" data-unref aria-label="' + T('Verbindung lösen', 'Remove link') + '">' + I('x') + '</button></div>' : '') +
-      '<label class="fl">' + T('Bereich', 'Area') + ' <em>*</em><select data-f="a"><option value="">' + T('– bitte wählen –', '– please choose –') + '</option>' +
-      AREAS.map(a => '<option value="' + a[0] + '"' + (d.a === a[0] ? ' selected' : '') + '>' + esc(areaName(a[0])) + '</option>').join('') + '</select></label>' +
-      '<label class="fl">' + T('Welches Spiel oder welche Stelle?', 'Which game or which place?') + ' <small>' + T('(wenn du es weißt)', '(if you know)') + '</small>' +
-      '<input data-f="w" maxlength="80" value="' + esc(d.w) + '" placeholder="' + T('z. B. Zombie-Abwehr, Level 7', 'e.g. Zombie Defense, level 7') + '"></label>' +
+      '<fieldset class="apick"><legend>' + T('Bereich', 'Area') + ' <em>*</em> <small>' + T('(antippen – wischen für mehr)', '(tap one – swipe for more)') + '</small></legend>' +
+      '<div class="hscroll" id="arow">' + AREAS.map(a => '<button type="button" class="atile' + (d.a === a[0] ? ' on' : '') + '" data-area="' + a[0] + '" aria-pressed="' + (d.a === a[0]) + '">' +
+        areaArt(a[0]) + '<span>' + esc(areaName(a[0])) + '</span></button>').join('') + '</div></fieldset>' +
+      '<div id="gpick">' + gPick() + '</div>' +
+      '<label class="fl">' + T('Wo genau?', 'Where exactly?') + ' <small>' + T('(wenn du es weißt)', '(if you know)') + '</small>' +
+      '<input data-f="w" maxlength="80" value="' + esc(d.w) + '" placeholder="' + T('z. B. Level 7, im Pause-Menü', 'e.g. level 7, in the pause menu') + '"></label>' +
       '<label class="fl">' + T(q[0], q[1]) + ' <em>*</em><textarea data-f="x" rows="5" maxlength="3000" placeholder="' + T(q[2], q[3]) + '">' + esc(d.x) + '</textarea></label>' +
       (bugK ? '<label class="fl">' + T('Wie kann man den Fehler auslösen?', 'How can we make the bug happen?') + ' <small>' + T('(Schritt für Schritt)', '(step by step)') + '</small>' +
         '<textarea data-f="st" rows="3" maxlength="1500" placeholder="' + T('1. Zockmix öffnen&#10;2. …', '1. Open Zockmix&#10;2. …') + '">' + esc(d.st) + '</textarea></label>' +
@@ -386,6 +465,29 @@
       '<button type="button" class="link" id="mclear">' + I('trash') + T('Formular leeren', 'Clear form') + '</button>' +
       '</form>';
   }
+  // „Welches Spiel?“ / „Welcher Simulator?“: Kacheln mit den Zockmix-Bildern; nach dem Antippen nur noch die Wahl mit „Ändern“
+  const gSel = () => (draft.g && pickList(draft.a).find(t => t.id === draft.g)) || null;
+  function gPick() {
+    const l = pickList(draft.a); if (!l.length) return '';
+    const sim = draft.a === 'sim', sel = gSel(), lab = sim ? T('Welcher Simulator?', 'Which simulator?') : T('Welches Spiel?', 'Which game?');
+    if (sel) return '<div class="fl">' + lab + '<div class="gsel">' + art(sel.id) + '<b>' + esc(tName(sel)) + '</b><button type="button" class="btn ghost sm" data-gchange>' + I('refresh') + T('Ändern', 'Change') + '</button></div></div>';
+    return '<div class="fl">' + lab + ' <small>' + T('(antippen, wenn du es weißt)', '(tap it if you know)') + '</small>' +
+      (sim ? '' : '<label class="sbox gq">' + I('search') + '<input type="search" id="gq" value="' + esc(st.gq) + '" placeholder="' + T('Spiel suchen …', 'Search for a game …') + '" aria-label="' + T('Spiel suchen', 'Search for a game') + '"></label>') +
+      '<div class="gbox' + (sim ? ' sims' : '') + '" id="gbox">' + gList() + '</div></div>';
+  }
+  function gList() {
+    const l = pickList(draft.a), q = fold(st.gq).trim();
+    const tile = t => '<button type="button" class="gtile" data-game="' + t.id + '">' + art(t.id) + '<span>' + esc(tName(t)) + '</span></button>';
+    if (draft.a === 'sim') return '<div class="ggrid">' + l.map(tile).join('') + '</div>';
+    const f = l.filter(t => !q || fold(t.de + ' ' + t.en).includes(q)), other = f.filter(t => !CATS.some(c => c[0] === t.cat));
+    if (!f.length) return '<p class="empty">' + T('Kein Spiel gefunden.', 'No game found.') + '</p>';
+    return CATS.map(c => { const cl = f.filter(t => t.cat === c[0]); return cl.length ? '<h4>' + T(c[1], c[2]) + '</h4><div class="ggrid">' + cl.map(tile).join('') + '</div>' : ''; }).join('') +
+      (other.length ? '<h4>' + T('Weitere', 'More') + '</h4><div class="ggrid">' + other.map(tile).join('') + '</div>' : '');
+  }
+  function formChanged() {
+    const p = $('#mprev'); if (p) p.textContent = mailBody();
+    const er = $('#merr'); if (er && !er.hidden && draft.a && String(draft.x).trim().length >= 8) er.hidden = true;
+  }
   function thanks() {
     const burst = st.burst && !RM; st.burst = false;
     const cols = ['#ffd23d', '#ff6fae', '#5aa8ff', '#3ddc78', '#b894ff', '#ff8a4d'];
@@ -403,13 +505,15 @@
   function mailSubject() {
     const k = KINDS[draft.k] || KINDS.fehler, a = draft.a ? area(draft.a) : null;
     const first = String(draft.x || '').trim().replace(/\s+/g, ' ');
-    return '[Zockmix ' + T(k[1], k[2]) + (draft.ref ? ' ' + draft.ref : '') + '] ' + (a ? T(a[1], a[2]) + ': ' : '') + (first.length > 50 ? first.slice(0, 48) + '…' : first);
+    const g = gSel();
+    return '[Zockmix ' + T(k[1], k[2]) + (draft.ref ? ' ' + draft.ref : '') + '] ' + (a ? (g ? tName(g) : T(a[1], a[2])) + ': ' : '') + (first.length > 50 ? first.slice(0, 48) + '…' : first);
   }
   function mailBody(cut) {
     const d = draft, k = KINDS[d.k] || KINDS.fehler, q = QL[d.k] || QL.fehler, L = [];
     L.push(T('Art', 'Type') + ': ' + T(k[1], k[2]));
     if (d.ref) { const r = findRef(d.ref); L.push(T('Gehört zu', 'About') + ': ' + d.ref + (r ? ' – ' + F(r, 't') : '')); }
-    L.push(T('Bereich', 'Area') + ': ' + (d.a ? areaName(d.a) : '–') + (d.w.trim() ? ' – ' + d.w.trim() : ''));
+    const g = gSel();
+    L.push(T('Bereich', 'Area') + ': ' + (d.a ? areaName(d.a) : '–') + (g ? ' – ' + tName(g) : '') + (String(d.w || '').trim() ? ' – ' + d.w.trim() : ''));
     L.push('', T(q[0], q[1]), d.x.trim() || '…');
     if (d.k === 'fehler') {
       if (d.st.trim()) L.push('', T('So kann man ihn auslösen', 'How to make it happen') + ':', d.st.trim());
@@ -449,7 +553,8 @@
   function setDraftK(k, ref, a) {
     draft.k = KINDS[k] ? k : 'fehler';
     draft.ref = ref || '';
-    if (a) draft.a = a;
+    if (a && a !== draft.a) { draft.a = a; draft.g = ''; }
+    const g = ref && gameOf(findRef(ref)); if (g) draft.g = g;
     st.thx = false; LS.set('draft', draft);
   }
 
@@ -522,7 +627,7 @@
   }
 
   // ---------- Anzeigen ----------
-  const VIEWS = { start: vStart, fehler: vBugs, melden: vReport, ideen: vIdeas, helfer: vHelp };
+  const VIEWS = { start: vStart, fehler: vBugs, melden: vReport, ideen: vIdeas, helfer: vHelp, artikel: vArticles };
   // mode: 1/-1 = Reiter-Wechsel (gleitet rein), 'keep' = gleiche Seite neu (Sprache, Filter, Auswahl) – sofort sichtbar, ohne Flackern
   function render(mode) {
     const v = $('#view');
@@ -534,13 +639,14 @@
   }
   function route() {
     const h = decodeURIComponent((location.hash || '').slice(1)).split('/');
-    const tab = TABS.includes(h[0]) ? h[0] : 'start', same = tab === cur, dir = cur ? TABS.indexOf(tab) - TABS.indexOf(cur) : 0;
+    const tab = TABS.includes(h[0]) || PAGES[h[0]] ? h[0] : 'start', same = tab === cur && (!PAGES[tab] || (h[1] || '') === focusId);
+    const dir = cur ? Math.sign(posOf(tab) - posOf(cur)) || (tab === cur ? 1 : 0) : 0;
     focusId = h[1] || '';
-    cur = tab; dots[tab] = false;
+    cur = tab; dots[tabOf(tab)] = false;
     if (focusId && tab === 'fehler') { st.bf = 'alle'; st.ba = ''; st.bq = ''; }
     if (focusId && tab === 'ideen') st.idf = 'alle';
     paintChrome(); render(same ? 'keep' : dir || 0); voteBar();
-    if (focusId) { const el = document.getElementById('i-' + focusId); if (el) { reveal(document, true); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }), 80); } }
+    if (focusId && !PAGES[tab]) { const el = document.getElementById('i-' + focusId); if (el) { reveal(document, true); setTimeout(() => el.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }), 80); } }
     else if (!same) window.scrollTo(0, 0);
   }
 
@@ -548,7 +654,7 @@
   // Tipp-Welle auf Knöpfen
   document.addEventListener('pointerdown', e => {
     if (RM) return;
-    const b = e.target.closest('.btn, .chips button, .kind, .stat, .wrow'); if (!b) return;
+    const b = e.target.closest('.btn, .chips button, .kind, .stat, .wrow, .atile, .gtile, .acard, .arow'); if (!b) return;
     const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2.2, w = document.createElement('span');
     w.className = 'rip'; w.style.cssText = 'width:' + s + 'px;height:' + s + 'px;left:' + (e.clientX - r.left - s / 2) + 'px;top:' + (e.clientY - r.top - s / 2) + 'px';
     b.appendChild(w); setTimeout(() => w.remove(), 600);
@@ -556,9 +662,17 @@
   document.addEventListener('click', e => {
     const t = e.target.closest('button, a, [data-more]');
     if (!t) return;
-    if (t.dataset.k) setDraftK(t.dataset.k, '', '');
+    if (t.dataset.k) setDraftK(t.dataset.k, '', t.dataset.a || '');
     if (t.dataset.bf) { st.bf = t.dataset.bf; if (cur === 'fehler') { e.preventDefault(); $$('.chips button').forEach(c => c.setAttribute('aria-pressed', String(c === t))); $('#blist').innerHTML = bugList(); reveal($('#blist')); } return; }
     if (t.dataset.if) { st.idf = t.dataset.if; if (cur === 'ideen') { e.preventDefault(); $$('.chips button').forEach(c => c.setAttribute('aria-pressed', String(c === t))); $('#ilist').innerHTML = ideaList(); reveal($('#ilist')); } return; }
+    if (t.dataset.ba != null && cur === 'fehler') { e.preventDefault(); st.ba = t.dataset.ba; $$('.achips button').forEach(c => c.setAttribute('aria-pressed', String(c === t))); $('#blist').innerHTML = bugList(); reveal($('#blist')); return; }
+    if (t.dataset.area) {
+      const a = t.dataset.area; if (a !== draft.a) { draft.a = a; draft.g = ''; st.gq = ''; }
+      $$('#arow .atile').forEach(b => { const on = b === t; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+      $('#gpick').innerHTML = gPick(); reveal($('#gpick'), true); saveDraft(); formChanged(); return;
+    }
+    if (t.dataset.game) { draft.g = t.dataset.game; st.gq = ''; $('#gpick').innerHTML = gPick(); saveDraft(); formChanged(); const gp = $('#gpick'); if (gp.getBoundingClientRect().top < 70) gp.scrollIntoView({ block: 'center', behavior: RM ? 'auto' : 'smooth' }); return; }
+    if (t.hasAttribute('data-gchange')) { draft.g = ''; st.gq = ''; $('#gpick').innerHTML = gPick(); saveDraft(); formChanged(); return; }
     if (t.dataset.l) { EN = t.dataset.l === 'en'; LS.set('lang', EN ? 'en' : 'de'); paintChrome(); render('keep'); voteBar(); return; }
     if (t.dataset.like) { toggleLike(t.dataset.like, t); return; }
     if (t.hasAttribute('data-more')) { const tx = t.previousElementSibling; tx.classList.remove('clamp'); tx.classList.add('open'); t.remove(); return; }
@@ -575,6 +689,10 @@
       case 'tnew': draft = D0(); LS.del('draft'); st.thx = false; render(); break;
       case 'tback': st.thx = false; render(); break;
       case 'vsend': sendVotes(); break;
+      case 'pmore': {
+        st.allPosts = true; const w = document.createElement('div'); w.innerHTML = posts.slice(PN).map(post).join('');
+        t.replaceWith(...w.childNodes); reveal($('#view')); break;
+      }
       case 'vhide': st.vbHide = unsent().length; voteBar(); break;
       case 'cout': LS.del('code'); render('keep'); toast(T('Code vergessen.', 'Code forgotten.'), 'check'); break;
       case 'instBtn': if (instEv) { instEv.prompt(); instEv.userChoice.finally(() => { instEv = null; const b = $('#instBtn'); if (b) b.hidden = true; }); } break;
@@ -588,25 +706,23 @@
   document.addEventListener('input', e => {
     const t = e.target;
     if (t.id === 'bq') { st.bq = t.value; $('#blist').innerHTML = bugList(); reveal($('#blist'), true); return; }
+    if (t.id === 'gq') { st.gq = t.value; const gb = $('#gbox'); if (gb) { gb.innerHTML = gList(); gb.scrollTop = 0; } return; }
     if (t.dataset.f) setField(t);
   });
   function setField(t) {
     {
-      draft[t.dataset.f] = t.type === 'checkbox' ? t.checked : t.value; saveDraft();
-      const p = $('#mprev'); if (p) p.textContent = mailBody();
-      const er = $('#merr'); if (er && !er.hidden && draft.a && String(draft.x).trim().length >= 8) er.hidden = true;
+      draft[t.dataset.f] = t.type === 'checkbox' ? t.checked : t.value; saveDraft(); formChanged();
     }
   }
   document.addEventListener('change', e => {
     const t = e.target;
-    if (t.id === 'ba') { st.ba = t.value; $('#blist').innerHTML = bugList(); reveal($('#blist')); return; }
     if (t.dataset.f) { setField(t); return; }
     if (t.name === 'k') { draft.k = t.value; saveDraft(); const y = window.scrollY; render('keep'); window.scrollTo(0, y); return; }
     if (t.name === 'oft') { draft.oft = t.value; saveDraft(); t.closest('fieldset').querySelectorAll('label').forEach(l => l.classList.toggle('on', l.contains(t))); const p = $('#mprev'); if (p) p.textContent = mailBody(); }
   });
   document.addEventListener('submit', e => {
     e.preventDefault();
-    if (e.target.id === 'mf') return sendMail();
+    if (e.target.id === 'mf') { const ae = document.activeElement; if (ae && ae.id === 'gq') { ae.blur(); return; } return sendMail(); }   // Enter in „Spiel suchen“ schickt nichts ab
     if (e.target.id === 'cf') {
       const v = $('#cin').value, er = $('#cerr');
       const bad = msg => { er.hidden = false; er.innerHTML = I('info') + '<span>' + esc(msg) + '</span>'; er.classList.remove('shake'); void er.offsetWidth; er.classList.add('shake'); };
@@ -643,7 +759,7 @@
   }
   function sendVotes() {
     const ids = unsent(); if (!ids.length) return;
-    const KN = { b: ['Beitrag', 'Post'], F: ['Fehler – hab ich auch', 'Bug – me too'], I: ['Idee – will ich auch', 'Idea – want it too'] };
+    const KN = { b: ['Beitrag', 'Post'], a: ['Artikel', 'Article'], F: ['Fehler – hab ich auch', 'Bug – me too'], I: ['Idee – will ich auch', 'Idea – want it too'] };
     const L = [T('Meine Stimmen aus dem Zockwerk:', 'My votes from Zockwerk:'), ''];
     ids.forEach(id => { const o = findAny(id), k = KN[id[0]] || KN.b; L.push('+1 ' + id + ' (' + T(k[0], k[1]) + '): ' + F(o, 't')); });
     L.push('', '— ' + T('geschrieben im Zockwerk', 'written in Zockwerk'));

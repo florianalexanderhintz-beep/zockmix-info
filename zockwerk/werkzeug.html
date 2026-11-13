@@ -48,6 +48,7 @@
     <p><b>Beitrag</b> → daten/beitraege.js</p><pre id="tp"></pre><button class="btn ghost sm" data-copy="tp">📋 Kopieren</button>
     <p><b>Fehler</b> → daten/fehler.js</p><pre id="tb"></pre><button class="btn ghost sm" data-copy="tb">📋 Kopieren</button>
     <p><b>Idee</b> → daten/ideen.js</p><pre id="ti"></pre><button class="btn ghost sm" data-copy="ti">📋 Kopieren</button>
+    <p><b>Artikel</b> → daten/artikel.js (Anleitung/Tipp; Bild kommt vom Bereich <code>a</code> oder von <code>g</code> = Spiel-id aus js/spiele.js)</p><pre id="ta"></pre><button class="btn ghost sm" data-copy="ta">📋 Kopieren</button>
   </section>
 </main>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -56,6 +57,7 @@
 <script src="daten/fehler.js"></script>
 <script src="daten/ideen.js"></script>
 <script src="daten/helfer.js"></script>
+<script src="daten/artikel.js"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id), ZH = window.ZH || {}, C = window.ZHC;
@@ -81,9 +83,10 @@
     const h = C.hash(v), x = (ZH.helpers || []).find(e => e.h === h);
     $('ckr').textContent = x ? '✅ Gehört zu ' + x.n + ' (' + x.id + ')' : 'ℹ️ Gültig, aber noch nicht eingetragen. Prüfsumme: ' + h;
   };
-  $('tp').textContent = "  { id: " + q(next(ZH.posts, 'b', 0)) + ", d: " + q(today) + ", k: 'update', em: '✨',\n    de: { t: 'Titel', x: 'Text' },\n    en: { t: 'Title', x: 'Text' } },";
-  $('tb').textContent = "  { id: " + q(next(ZH.bugs, 'F-', 3)) + ", s: 'offen', a: 'spiele', d: " + q(today) + ", by: [],\n    de: { t: 'Titel', w: 'Spiel/Stelle', x: 'Was passiert', h: 'Tipp (darf weg)' },\n    en: { t: 'Title', w: 'Game/place', x: 'What happens', h: 'Tip (optional)' } },";
+  $('tp').textContent = "  { id: " + q(next(ZH.posts, 'b', 0)) + ", d: " + q(today) + ", k: 'update', ic: 'sparkle',\n    de: { t: 'Titel', x: 'Text' },\n    en: { t: 'Title', x: 'Text' } },";
+  $('tb').textContent = "  { id: " + q(next(ZH.bugs, 'F-', 3)) + ", s: 'offen', a: 'spiele', g: 'zombie', d: " + q(today) + ", by: [],\n    de: { t: 'Titel', w: 'Spiel/Stelle', x: 'Was passiert', h: 'Tipp (darf weg)' },\n    en: { t: 'Title', w: 'Game/place', x: 'What happens', h: 'Tip (optional)' } },";
   $('ti').textContent = "  { id: " + q(next(ZH.ideas, 'I-', 3)) + ", s: 'idee', a: 'spiele', d: " + q(today) + ", by: [],\n    de: { t: 'Titel', x: 'Was ist die Idee', r: 'Antwort vom Entwickler (darf weg)' },\n    en: { t: 'Title', x: 'What is the idea', r: 'Answer from the developer (optional)' } },";
+  $('ta').textContent = "  { id: " + q(next(ZH.guides, 'a', 0)) + ", d: " + q(today) + ", k: 'tipp', a: 'spiele', g: 'golf',\n    de: { t: 'Titel', s: 'Ein Satz für die Karte', x: 'Text' },\n    en: { t: 'Title', s: 'One sentence for the card', x: 'Text' } },";
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-copy]'); if (!b) return;
     const t = $(b.dataset.copy).textContent, ta = document.createElement('textarea');
