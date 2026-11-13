@@ -474,7 +474,8 @@
   const KTINT = { fehler: 'rgba(255, 120, 40, .58)', idee: 'rgba(255, 172, 28, .55)', frage: 'rgba(56, 132, 255, .6)', lob: 'rgba(255, 30, 60, .72)' };
   function tint() {
     const el = $('#tint'); if (!el) return;
-    el.style.setProperty('--kc', cur === 'melden' ? KTINT[draft.k] || KTINT.fehler : 'rgba(11, 22, 54, 0)');
+    const k = st.thx && st.sentK ? st.sentK : draft.k;
+    el.style.setProperty('--kc', cur === 'melden' ? KTINT[k] || KTINT.fehler : 'rgba(11, 22, 54, 0)');
   }
   // „Welches Spiel?“ / „Welcher Simulator?“: Kacheln mit den Zockmix-Bildern; nach dem Antippen nur noch die Wahl mit „Ändern“
   const gSel = () => (draft.g && pickList(draft.a).find(t => t.id === draft.g)) || null;
@@ -511,6 +512,8 @@
         'Did your e-mail app open? Then tap <b>Send</b> there. We read every message – an answer can take a few days.') + '</p>' +
       '<p class="hint">' + T('Wenn wir deine Meldung aufnehmen, siehst du sie bald unter „Fehler“ oder „Ideen“. Und wenn sie uns hilft, bekommst du vielleicht einen Helfer-Code.',
         'If we add your report, you’ll soon see it under “Bugs” or “Ideas”. And if it helps us, you might get a helper code.') + '</p>' +
+      '<p class="hint">' + T('Das Formular ist jetzt leer für deine nächste Meldung. Hat sich kein E-Mail-Programm geöffnet? Dann tippe auf „Zurück zum Text“.',
+        'The form is now empty for your next report. Didn’t your e-mail app open? Then tap “Back to the text”.') + '</p>' +
       '<div class="acts"><button class="btn" id="tnew">' + I('plus') + T('Neue Meldung', 'New report') + '</button><button class="btn ghost" id="tback">' + I('pencil') + T('Zurück zum Text', 'Back to the text') + '</button></div></div>';
   }
   function mailSubject() {
@@ -559,6 +562,10 @@
     a.href = 'mailto:' + MAIL + '?subject=' + encodeURIComponent(mailSubject()) + '&body=' + encodeURIComponent(body);
     document.body.appendChild(a); a.click(); a.remove();
     if (body !== full) toast(T('Die Fehler-Liste war sehr lang und wurde gekürzt.', 'The error list was very long and got shortened.'), 'info');
+    // Formular für die nächste Meldung leeren – Handy-Modell, Version und Spitzname bleiben. „Zurück zum Text“ holt alles zurück (zmh-sent),
+    // falls sich kein E-Mail-Programm geöffnet hat.
+    LS.set('sent', draft); st.sentK = draft.k;
+    clearTimeout(saveT); draft = Object.assign(D0(), { dev: draft.dev, ver: draft.ver, nick: draft.nick, pub: draft.pub }); st.gq = ''; LS.set('draft', draft);
     st.thx = true; st.burst = true; setTimeout(() => { render(); window.scrollTo(0, 0); }, 400);
   }
   function setDraftK(k, ref, a) {
@@ -654,6 +661,7 @@
     const tab = TABS.includes(h[0]) || PAGES[h[0]] ? h[0] : 'start', same = tab === cur && (!PAGES[tab] || (h[1] || '') === focusId);
     const dir = cur ? Math.sign(posOf(tab) - posOf(cur)) || (tab === cur ? 1 : 0) : 0;
     focusId = h[1] || '';
+    if (tab === 'melden' && cur && cur !== 'melden') st.thx = false;
     cur = tab; dots[tabOf(tab)] = false;
     if (focusId && tab === 'fehler') { st.bf = 'alle'; st.ba = ''; st.bq = ''; }
     if (focusId && tab === 'ideen') st.idf = 'alle';
@@ -698,8 +706,8 @@
       case 'mcopy': if (check()) copy(mailSubject() + '\n\n' + mailBody(), T('Text kopiert!', 'Text copied!')); break;
       case 'mcaddr': copy(MAIL, T('Adresse kopiert!', 'Address copied!')); break;
       case 'mclear': if (confirm(T('Alles im Formular löschen?', 'Clear everything in the form?'))) { draft = D0(); LS.del('draft'); render(); } break;
-      case 'tnew': draft = D0(); LS.del('draft'); st.thx = false; render(); break;
-      case 'tback': st.thx = false; render(); break;
+      case 'tnew': st.thx = false; render(); break;
+      case 'tback': { const sv = LS.get('sent', null); if (sv) { draft = Object.assign(D0(), sv); LS.set('draft', draft); } st.thx = false; render(); break; }
       case 'vsend': sendVotes(); break;
       case 'pmore': {
         st.allPosts = true; const w = document.createElement('div'); w.innerHTML = posts.slice(PN).map(post).join('');
@@ -710,7 +718,7 @@
       case 'instBtn': if (instEv) { instEv.prompt(); instEv.userChoice.finally(() => { instEv = null; const b = $('#instBtn'); if (b) b.hidden = true; }); } break;
       case 'wipe':
         if (confirm(T('Sprache, Entwurf und Helfer-Code auf diesem Handy löschen?', 'Delete language, draft and helper code on this phone?'))) {
-          ['lang', 'draft', 'code', 'seen', 'likes'].forEach(LS.del); draft = D0(); likes = {}; toast(T('Gelöscht.', 'Deleted.'), 'check'); render('keep'); voteBar();
+          ['lang', 'draft', 'sent', 'code', 'seen', 'likes'].forEach(LS.del); draft = D0(); likes = {}; toast(T('Gelöscht.', 'Deleted.'), 'check'); render('keep'); voteBar();
         }
         break;
     }

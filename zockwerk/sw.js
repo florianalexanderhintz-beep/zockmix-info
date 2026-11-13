@@ -3,7 +3,7 @@
    Wichtig (13.11.2026): Das Netz wird mit cache: 'no-cache' gefragt – sonst liefert der Browser bis zu 10 Minuten lang die alte Datei
    aus seinem eigenen Zwischenspeicher (GitHub Pages erlaubt 10 Minuten), und die als App installierte Seite zeigt noch die alte Fassung.
    Der Server antwortet bei unveränderten Dateien nur kurz „unverändert“ (304), das kostet kaum Daten. */
-const VER = 'zmh-7';
+const VER = 'zmh-8';
 const FILES = ['./', 'index.html', 'css/app.css', 'js/icons.js', 'js/code.js', 'js/spiele.js', 'js/app.js', 'daten/beitraege.js', 'daten/fehler.js', 'daten/ideen.js',
   'daten/fragen.js', 'daten/helfer.js', 'daten/artikel.js', 'manifest.webmanifest', 'img/kacheln.webp', 'img/icon-192.png', 'img/icon-512.png'];
 self.addEventListener('install', e => {
