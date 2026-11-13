@@ -16,6 +16,11 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; opa
     radial-gradient(circle at 30% 80%, rgba(255,106,193,.3) 0 1.6px, transparent 2.6px), radial-gradient(circle at 70% 70%, rgba(95,246,255,.3) 0 1.6px, transparent 2.6px);
   background-size: 260px 300px; }
 a { color: var(--gold); }
+/* Farb-Schimmer hinter der Seite (Melden: Farbe der gewählten Art), weich überblendet */
+@property --kc { syntax: '<color>'; inherits: true; initial-value: rgba(11, 22, 54, 0); }
+#tint { position: fixed; inset: 0; z-index: 0; pointer-events: none; --kc: rgba(11, 22, 54, 0); transition: --kc .8s var(--ease);
+  background: radial-gradient(ellipse 150% 70% at 50% 6%, var(--kc), rgba(11, 22, 54, 0) 75%), radial-gradient(ellipse 150% 55% at 50% 104%, var(--kc), rgba(11, 22, 54, 0) 72%); }
+#tint::before { content: ''; position: absolute; inset: 0; background: var(--kc); opacity: .38; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 .ic { width: 1.2em; height: 1.2em; flex: none; vertical-align: -.22em; }
 h2 { display: flex; align-items: center; gap: 9px; font-size: 21px; font-weight: 900; font-style: italic; margin: 30px 2px 12px; text-shadow: 0 3px 0 #0c2f7a; }
@@ -242,10 +247,12 @@ textarea { resize: vertical; line-height: 1.45; }
   border: 2px solid var(--line); cursor: pointer; font-weight: 800; font-size: 14px; text-align: center; transition: border-color .25s, transform .2s var(--spring); }
 .kind::before { content: ''; position: absolute; inset: 0; background: var(--c); opacity: 0; transition: opacity .25s; }
 .kind > * { position: relative; }
+.kind > .rip { position: absolute; }   /* sonst wächst die Tipp-Welle im Knopf mit und alle vier Knöpfe werden kurz riesig */
 .kind .ic { width: 28px; height: 28px; color: var(--c); }
 .kind input, .seg input { position: absolute; left: 0; top: 0; width: 1px; height: 1px; min-height: 0; margin: 0; padding: 0; border: 0; opacity: 0; pointer-events: none; }
 .kind.on { border-color: var(--c); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.25); }
-.kind.on::before { opacity: .16; }
+.kind.on::before { opacity: .22; }
+.kind.on { box-shadow: 0 8px 18px rgba(0,0,0,.25), 0 0 22px -4px var(--c); }
 .kind.on .ic { animation: wiggle .5s var(--spring); }
 @keyframes wiggle { 0% { transform: scale(.6) rotate(-15deg); } 60% { transform: scale(1.18) rotate(6deg); } 100% { transform: none; } }
 .kind:has(input:focus-visible), .seg label:has(input:focus-visible), .check:has(input:focus-visible) { outline: 3px solid var(--gold); outline-offset: 2px; }

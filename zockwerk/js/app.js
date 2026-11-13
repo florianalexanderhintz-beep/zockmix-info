@@ -419,7 +419,7 @@
     lob: ['Was gefällt dir?', 'What do you like?', 'Was macht dir am meisten Spaß?', 'What’s the most fun for you?'] };
   function vReport() {
     if (st.thx) return thanks();
-    const d = draft, k = KINDS[d.k] ? d.k : 'fehler', q = QL[k], ref = d.ref && findRef(d.ref), bugK = k === 'fehler';
+    const d = draft, k = KINDS[d.k] ? d.k : 'fehler', ref = d.ref && findRef(d.ref);
     const steps = [['send', 'Du schickst die E-Mail', 'You send the e-mail'], ['search', 'Wir lesen und prüfen sie', 'We read and check it'],
       ['globe', 'Sie kommt in die Liste – jeder sieht den Stand', 'It goes on the list – everyone sees its status'], ['trophy', 'Hilft sie: Punkte für dich', 'If it helps: points for you']];
     return head('send', '#ff6fae', T('Melden', 'Report'), T('Erzähl uns, was los ist. Am Ende öffnet sich dein E-Mail-Programm mit dem fertigen Text – du schickst ihn selbst ab.',
@@ -439,16 +439,7 @@
       '<div id="gpick">' + gPick() + '</div>' +
       '<label class="fl">' + T('Wo genau?', 'Where exactly?') + ' <small>' + T('(wenn du es weißt)', '(if you know)') + '</small>' +
       '<input data-f="w" maxlength="80" value="' + esc(d.w) + '" placeholder="' + T('z. B. Level 7, im Pause-Menü', 'e.g. level 7, in the pause menu') + '"></label>' +
-      '<label class="fl">' + T(q[0], q[1]) + ' <em>*</em><textarea data-f="x" rows="5" maxlength="3000" placeholder="' + T(q[2], q[3]) + '">' + esc(d.x) + '</textarea></label>' +
-      (bugK ? '<label class="fl">' + T('Wie kann man den Fehler auslösen?', 'How can we make the bug happen?') + ' <small>' + T('(Schritt für Schritt)', '(step by step)') + '</small>' +
-        '<textarea data-f="st" rows="3" maxlength="1500" placeholder="' + T('1. Zockmix öffnen&#10;2. …', '1. Open Zockmix&#10;2. …') + '">' + esc(d.st) + '</textarea></label>' +
-        '<fieldset class="seg"><legend>' + T('Wie oft passiert das?', 'How often does it happen?') + '</legend>' +
-        [['immer', 'Immer', 'Always'], ['manchmal', 'Manchmal', 'Sometimes'], ['einmal', 'Nur einmal', 'Just once']].map(o =>
-          '<label' + (d.oft === o[0] ? ' class="on"' : '') + '><input type="radio" name="oft" value="' + o[0] + '"' + (d.oft === o[0] ? ' checked' : '') + '>' + T(o[1], o[2]) + '</label>').join('') + '</fieldset>' +
-        '<details class="opt"' + (d.log ? ' open' : '') + '><summary>' + I('copy') + '<span>' + T('Fehler-Liste aus Zockmix einfügen', 'Paste the error list from Zockmix') + ' <small>' + T('(hilft uns sehr)', '(helps a lot)') + '</small></span>' + I('chev', 'chev') + '</summary>' +
-        '<p class="hint">' + T('In Zockmix: Einstellungen → „Hilfe für Tester“ → „Fehler-Liste“ → „Kopieren“. Dann hier lange drücken und „Einfügen“ wählen.',
-          'In Zockmix: Settings → “Help for testers” → “Error list” → “Copy”. Then long-press here and choose “Paste”.') + '</p>' +
-        '<textarea data-f="log" rows="4" maxlength="20000" aria-label="' + T('Fehler-Liste', 'Error list') + '">' + esc(d.log) + '</textarea></details>' : '') +
+      '<div id="kpart">' + kindPart() + '</div>' +
       '<div class="row2"><label class="fl">' + T('Handy-Modell', 'Phone model') + '<input data-f="dev" maxlength="60" value="' + esc(d.dev) + '" placeholder="' + T('steht in den Handy-Einstellungen', 'see your phone’s settings') + '"></label>' +
       '<label class="fl">' + T('Zockmix-Version', 'Zockmix version') + '<input data-f="ver" maxlength="20" inputmode="decimal" value="' + esc(d.ver) + '" placeholder="' + T('z. B. 2.900', 'e.g. 2.900') + '"></label></div>' +
       '<p class="hint">' + T('Die Version steht ganz unten auf der Zockmix-Startseite.', 'The version is at the very bottom of the Zockmix home screen.') + '</p>' +
@@ -464,6 +455,26 @@
       '<button type="button" class="link" id="mcaddr">' + T('Adresse kopieren', 'Copy address') + '</button></p>' +
       '<button type="button" class="link" id="mclear">' + I('trash') + T('Formular leeren', 'Clear form') + '</button>' +
       '</form>';
+  }
+  // Felder, die von der Art abhängen (Frage-Text, bei Fehlern Schritte, Wie oft, Fehler-Liste) – beim Wechsel der Art wird nur das neu gemalt
+  function kindPart() {
+    const d = draft, k = KINDS[d.k] ? d.k : 'fehler', q = QL[k], bugK = k === 'fehler';
+    return '<label class="fl">' + T(q[0], q[1]) + ' <em>*</em><textarea data-f="x" rows="5" maxlength="3000" placeholder="' + T(q[2], q[3]) + '">' + esc(d.x) + '</textarea></label>' +
+    (bugK ? '<label class="fl">' + T('Wie kann man den Fehler auslösen?', 'How can we make the bug happen?') + ' <small>' + T('(Schritt für Schritt)', '(step by step)') + '</small>' +
+      '<textarea data-f="st" rows="3" maxlength="1500" placeholder="' + T('1. Zockmix öffnen&#10;2. …', '1. Open Zockmix&#10;2. …') + '">' + esc(d.st) + '</textarea></label>' +
+      '<fieldset class="seg"><legend>' + T('Wie oft passiert das?', 'How often does it happen?') + '</legend>' +
+      [['immer', 'Immer', 'Always'], ['manchmal', 'Manchmal', 'Sometimes'], ['einmal', 'Nur einmal', 'Just once']].map(o =>
+        '<label' + (d.oft === o[0] ? ' class="on"' : '') + '><input type="radio" name="oft" value="' + o[0] + '"' + (d.oft === o[0] ? ' checked' : '') + '>' + T(o[1], o[2]) + '</label>').join('') + '</fieldset>' +
+      '<details class="opt"' + (d.log ? ' open' : '') + '><summary>' + I('copy') + '<span>' + T('Fehler-Liste aus Zockmix einfügen', 'Paste the error list from Zockmix') + ' <small>' + T('(hilft uns sehr)', '(helps a lot)') + '</small></span>' + I('chev', 'chev') + '</summary>' +
+      '<p class="hint">' + T('In Zockmix: Einstellungen → „Hilfe für Tester“ → „Fehler-Liste“ → „Kopieren“. Dann hier lange drücken und „Einfügen“ wählen.',
+        'In Zockmix: Settings → “Help for testers” → “Error list” → “Copy”. Then long-press here and choose “Paste”.') + '</p>' +
+      '<textarea data-f="log" rows="4" maxlength="20000" aria-label="' + T('Fehler-Liste', 'Error list') + '">' + esc(d.log) + '</textarea></details>' : '');
+  }
+  // Hintergrund leuchtet in der Farbe der gewählten Art (nur auf „Melden“), weich überblendet über die Farbe --kc von #tint
+  const KTINT = { fehler: 'rgba(255, 120, 40, .58)', idee: 'rgba(255, 172, 28, .55)', frage: 'rgba(56, 132, 255, .6)', lob: 'rgba(255, 30, 60, .72)' };
+  function tint() {
+    const el = $('#tint'); if (!el) return;
+    el.style.setProperty('--kc', cur === 'melden' ? KTINT[draft.k] || KTINT.fehler : 'rgba(11, 22, 54, 0)');
   }
   // „Welches Spiel?“ / „Welcher Simulator?“: Kacheln mit den Zockmix-Bildern; nach dem Antippen nur noch die Wahl mit „Ändern“
   const gSel = () => (draft.g && pickList(draft.a).find(t => t.id === draft.g)) || null;
@@ -633,6 +644,7 @@
     const v = $('#view');
     v.innerHTML = VIEWS[cur]();
     v.className = 'view v-' + cur;
+    tint();
     if (mode === 'keep') { reveal(v, true); return; }
     if (typeof mode === 'number' && mode && !RM) { void v.offsetWidth; v.classList.add(mode > 0 ? 'enter-r' : 'enter-l'); }
     reveal(v);
@@ -717,7 +729,12 @@
   document.addEventListener('change', e => {
     const t = e.target;
     if (t.dataset.f) { setField(t); return; }
-    if (t.name === 'k') { draft.k = t.value; saveDraft(); const y = window.scrollY; render('keep'); window.scrollTo(0, y); return; }
+    if (t.name === 'k') {
+      draft.k = t.value; saveDraft();
+      $$('.kinds .kind').forEach(l => l.classList.toggle('on', l.contains(t)));
+      const kp = $('#kpart'); if (kp) kp.innerHTML = kindPart(); else render('keep');
+      formChanged(); tint(); return;
+    }
     if (t.name === 'oft') { draft.oft = t.value; saveDraft(); t.closest('fieldset').querySelectorAll('label').forEach(l => l.classList.toggle('on', l.contains(t))); const p = $('#mprev'); if (p) p.textContent = mailBody(); }
   });
   document.addEventListener('submit', e => {
