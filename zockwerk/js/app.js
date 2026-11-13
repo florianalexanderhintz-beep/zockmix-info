@@ -791,7 +791,21 @@
   let instEv = null;
   window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); instEv = e; const b = $('#instBtn'); if (b) b.hidden = false; });
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => { /* ohne Offline-Speicher geht es auch */ }));
+    // Neue Fassung online? Die als App installierte Seite fragt beim Start und beim Zurückkommen nach. Kommt die neue Fassung gleich beim
+    // Start (erste 5 s), lädt die Seite einmal neu; sonst erst beim nächsten Zurückkommen (der Entwurf beim Melden ist dann schon gemerkt).
+    const hadCtl = !!navigator.serviceWorker.controller;
+    let swReg = null, updReady = false, reloaded = false;
+    const reload = () => { if (!reloaded) { reloaded = true; location.reload(); } };
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadCtl || reloaded) return;
+      if (performance.now() < 5000) reload();
+      else { updReady = true; toast(T('Neue Zockwerk-Fassung da – kommt beim nächsten Öffnen.', 'New Zockwerk version ready – it loads next time you open it.'), 'sparkle'); }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) return;
+      if (updReady) { LS.set('draft', draft); reload(); } else if (swReg) swReg.update().catch(() => { /* ohne Netz egal */ });
+    });
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(r => { swReg = r; }).catch(() => { /* ohne Offline-Speicher geht es auch */ }));
   }
 
   // Aus Zockmix geöffnet: #lang=de|en&v=<Version> – Sprache übernehmen, Version ins Formular, dann zur Startseite
