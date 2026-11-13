@@ -1,11 +1,12 @@
-# Zockmix – Infoseite
+# Zockmix – Infoseite (umgezogen)
 
-Kleine Webseite zur Android-App **Zockmix** (Deutsch + English, Sprachwahl oben rechts):
+**Die Seiten sind seit 13.11.2026 hier:** https://zockwerk.github.io/ (Projekt `Zockwerk/zockwerk.github.io`).
 
-- Startseite: https://florianalexanderhintz-beep.github.io/zockmix-info/
-- Datenschutz / Privacy: https://florianalexanderhintz-beep.github.io/zockmix-info/datenschutz.html
-- Impressum / Legal notice: https://florianalexanderhintz-beep.github.io/zockmix-info/impressum.html
-- **Zockwerk** (Hilfe-Seite: Neuigkeiten, bekannte Fehler, Ideen, Melden): https://florianalexanderhintz-beep.github.io/zockmix-info/zockwerk/
+- Startseite: https://zockwerk.github.io/
+- Datenschutz / Privacy: https://zockwerk.github.io/datenschutz.html
+- Impressum / Legal notice: https://zockwerk.github.io/impressum.html
+- Zockwerk: https://zockwerk.github.io/zockwerk/
 
-Keine Cookies, kein Tracking, keine fremden Schriften. Quelle der Dateien: `store/webseite/` im (privaten) Zockmix-Projekt; der Ordner `zockwerk/` ist eine Kopie des (privaten) Projekts
-`Zockmix-Support-` (ohne .md-Dateien).
+Dieses Projekt enthält nur noch **Weiterleitungen** (der Teil hinter `#` geht mit), damit alte Links (ältere Zockmix-Versionen,
+Play Console) weiter funktionieren, und `zockwerk/sw.js`, der den alten Offline-Speicher auf den Handys löscht.
+Hier nichts Neues mehr hochladen.

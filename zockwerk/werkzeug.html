@@ -3,100 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Zockwerk – Werkzeug</title>
-<link rel="icon" href="img/icon-192.png">
-<link rel="stylesheet" href="css/app.css">
-<style>
-  main { padding-bottom: 40px; } .card h2 { margin-top: 0; } pre { white-space: pre-wrap; word-break: break-word; background: rgba(0,0,0,.35); border-radius: 12px; padding: 10px; font: 13px/1.5 ui-monospace, Menlo, monospace; }
-  .code { font: 900 28px ui-monospace, Menlo, monospace; letter-spacing: 2px; color: var(--gold); text-align: center; margin: 10px 0; }
-  .row { display: flex; gap: 8px; flex-wrap: wrap; } .row > * { flex: 1 1 140px; } label.fl { margin-bottom: 10px; }
-</style>
+<title>Umgezogen · Moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://zockwerk.github.io/zockwerk/werkzeug.html">
+<script>location.replace('https://zockwerk.github.io/zockwerk/werkzeug.html' + location.search + location.hash);</script>
+<meta http-equiv="refresh" content="1; url=https://zockwerk.github.io/zockwerk/werkzeug.html">
 </head>
-<body>
-<header class="top"><div class="in"><a class="brand" href="./"><img src="img/icon-192.png" alt="">ZOCK<b>WERK</b><small>Werkzeug</small></a></div></header>
-<main>
-  <h1 class="vh">🛠️ Werkzeug</h1>
-  <p class="sub">Nur für den Entwickler. Diese Seite ist im Zockwerk nicht verlinkt und speichert nichts.</p>
-
-  <section class="card">
-    <h2>🔑 Neuer Helfer-Code</h2>
-    <div class="row">
-      <label class="fl">Spitzname (nie echter Name)<input id="hn" maxlength="20" placeholder="z. B. Blitzfuchs"></label>
-      <label class="fl">Bildchen (ein Emoji, leer = Anfangsbuchstabe)<input id="hav" maxlength="4" value=""></label>
-    </div>
-    <label class="check"><input type="checkbox" id="hpub"><span>Darf auf die Ehrenliste (nur wenn der Helfer – bei Kindern die Eltern – ja gesagt hat)</span></label>
-    <button class="btn" id="mk">✨ Code machen</button>
-    <div id="out" hidden>
-      <div class="code" id="code"></div>
-      <p class="hint">⚠️ Den Code <b>nur dem Helfer</b> schicken – nie ins Projekt schreiben. Ins Projekt kommt nur dieser Eintrag (in <b>daten/helfer.js</b> in die Liste):</p>
-      <pre id="snip"></pre><button class="btn ghost sm" data-copy="snip">📋 Eintrag kopieren</button>
-      <p class="hint">E-Mail an den Helfer:</p>
-      <pre id="mail"></pre><button class="btn ghost sm" data-copy="mail">📋 E-Mail-Text kopieren</button>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>🔎 Code prüfen</h2>
-    <div class="cf"><input id="ck" placeholder="ZM-XXXX-XXXX"><button class="btn" id="ckb">Prüfen</button></div>
-    <p id="ckr" class="hint"></p>
-  </section>
-
-  <section class="card">
-    <h2>📝 Vorlagen</h2>
-    <p class="hint">Mit dem heutigen Datum und der nächsten freien Nummer. Neues immer <b>oben</b> in die Liste der Datei einfügen.</p>
-    <p><b>Beitrag</b> → daten/beitraege.js</p><pre id="tp"></pre><button class="btn ghost sm" data-copy="tp">📋 Kopieren</button>
-    <p><b>Fehler</b> → daten/fehler.js</p><pre id="tb"></pre><button class="btn ghost sm" data-copy="tb">📋 Kopieren</button>
-    <p><b>Idee</b> → daten/ideen.js</p><pre id="ti"></pre><button class="btn ghost sm" data-copy="ti">📋 Kopieren</button>
-    <p><b>Artikel</b> → daten/artikel.js (Anleitung/Tipp; Bild kommt vom Bereich <code>a</code> oder von <code>g</code> = Spiel-id aus js/spiele.js)</p><pre id="ta"></pre><button class="btn ghost sm" data-copy="ta">📋 Kopieren</button>
-  </section>
-</main>
-<div id="toast" role="status" aria-live="polite"></div>
-<script src="js/code.js"></script>
-<script src="daten/beitraege.js"></script>
-<script src="daten/fehler.js"></script>
-<script src="daten/ideen.js"></script>
-<script src="daten/helfer.js"></script>
-<script src="daten/artikel.js"></script>
-<script>
-(() => {
-  const $ = id => document.getElementById(id), ZH = window.ZH || {}, C = window.ZHC;
-  const d = new Date(), today = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  const q = s => "'" + String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
-  const next = (list, pre, w) => { let n = 0; (list || []).forEach(x => { const m = new RegExp('^' + pre + '(\\d+)$').exec(x.id || ''); if (m) n = Math.max(n, +m[1]); }); return pre + String(n + 1).padStart(w, '0'); };
-  const toast = t => { const el = $('toast'); el.textContent = t; el.classList.add('on'); setTimeout(() => el.classList.remove('on'), 2000); };
-  $('mk').onclick = () => {
-    const n = $('hn').value.trim(); if (!n) { toast('Bitte einen Spitznamen eingeben'); return; }
-    const code = C.make(), id = next(ZH.helpers, 'h', 0);
-    $('code').textContent = code;
-    $('snip').textContent = "  { id: " + q(id) + ", n: " + q(n) + ", av: " + q($('hav').value.trim()) + ", pub: " + ($('hpub').checked ? 1 : 0) +
-      ", h: " + q(C.hash(code)) + ", seit: " + q(today) + ", badges: [], extra: [] },";
-    $('mail').textContent = 'Hallo ' + n + '!\n\nDanke für deine Hilfe – du hast Zockmix besser gemacht! 💖\nDein Helfer-Code: ' + code +
-      '\n\nÖffne das Zockwerk → „Helfer“ und gib dort den Code ein. Dann siehst du deinen Rang und deine Abzeichen.\nDen Code bitte niemandem weitergeben.' +
-      '\n\n---\n\nHi ' + n + '!\n\nThanks for your help – you made Zockmix better! 💖\nYour helper code: ' + code +
-      '\n\nOpen Zockwerk → “Helpers” and enter the code. Then you can see your rank and badges.\nPlease don’t share the code with anyone.';
-    $('out').hidden = false;
-  };
-  $('ckb').onclick = () => {
-    const v = $('ck').value;
-    if (!C.ok(v)) { $('ckr').textContent = '❌ Kein gültiger Code.'; return; }
-    const h = C.hash(v), x = (ZH.helpers || []).find(e => e.h === h);
-    $('ckr').textContent = x ? '✅ Gehört zu ' + x.n + ' (' + x.id + ')' : 'ℹ️ Gültig, aber noch nicht eingetragen. Prüfsumme: ' + h;
-  };
-  $('tp').textContent = "  { id: " + q(next(ZH.posts, 'b', 0)) + ", d: " + q(today) + ", k: 'update', ic: 'sparkle',\n    de: { t: 'Titel', x: 'Text' },\n    en: { t: 'Title', x: 'Text' } },";
-  $('tb').textContent = "  { id: " + q(next(ZH.bugs, 'F-', 3)) + ", s: 'offen', a: 'spiele', g: 'zombie', d: " + q(today) + ", by: [],\n    de: { t: 'Titel', w: 'Spiel/Stelle', x: 'Was passiert', h: 'Tipp (darf weg)' },\n    en: { t: 'Title', w: 'Game/place', x: 'What happens', h: 'Tip (optional)' } },";
-  $('ti').textContent = "  { id: " + q(next(ZH.ideas, 'I-', 3)) + ", s: 'idee', a: 'spiele', d: " + q(today) + ", by: [],\n    de: { t: 'Titel', x: 'Was ist die Idee', r: 'Antwort vom Entwickler (darf weg)' },\n    en: { t: 'Title', x: 'What is the idea', r: 'Answer from the developer (optional)' } },";
-  $('ta').textContent = "  { id: " + q(next(ZH.guides, 'a', 0)) + ", d: " + q(today) + ", k: 'tipp', a: 'spiele', g: 'golf',\n    de: { t: 'Titel', s: 'Ein Satz für die Karte', x: 'Text' },\n    en: { t: 'Title', s: 'One sentence for the card', x: 'Text' } },";
-  document.addEventListener('click', e => {
-    const b = e.target.closest('[data-copy]'); if (!b) return;
-    const t = $(b.dataset.copy).textContent, ta = document.createElement('textarea');
-    ta.value = t; document.body.appendChild(ta); ta.select();
-    let ok = false; try { ok = document.execCommand('copy'); } catch (er) { ok = false; }
-    ta.remove();
-    if (!ok && navigator.clipboard) navigator.clipboard.writeText(t).then(() => toast('Kopiert!'), () => toast('Bitte von Hand markieren'));
-    else toast(ok ? 'Kopiert!' : 'Bitte von Hand markieren');
-  });
-})();
-</script>
+<body style="margin:0;min-height:100vh;display:grid;place-items:center;background:#0b1636;color:#fff;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:16px">
+<p>Diese Seite ist umgezogen · This page has moved<br><a style="color:#ffd23d;font-weight:700" href="https://zockwerk.github.io/zockwerk/werkzeug.html">zockwerk.github.io/zockwerk/werkzeug.html</a></p>
 </body>
 </html>
